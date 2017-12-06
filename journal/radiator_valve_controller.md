@@ -10,6 +10,8 @@ We used SparkFun's EasyDriver and the HUZZAH Feather to drive the stepper motor.
 
 See `stepper_motor_circuit.pdf` for the schematic used.
 
+A video of our experiment can be found here: https://www.youtube.com/watch?v=cfWxlwDK_CY&feature=youtu.be
+
 ## 05/12/2017
 
 We spoke to Joseph Foley in the engineering department at RU to discuss other possible solutions for turning a radiator valve with precision and the ability to know where the valve is positioned after power lost. Joseph had suggest a few things like a servo valve and a thrust berring, but all unfortunately were atleast 20000ISK or more in price. This did not fit within our budget.
