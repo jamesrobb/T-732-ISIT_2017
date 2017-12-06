@@ -26,3 +26,9 @@ We talked to a picture frame company that will make our frame to house the scree
 
 **Security Concerns**
 * Default usernames and passwords need to be changed for the OS and varying service (SSH, VNC, FTP)
+
+## 06/12/2017
+
+Started to address the problem of how to provide a somewhat user-friendly way of interfacing with the digital picture frame. A user should be able to easily connect the picture frame to the local wifi network and then interact with it through that. Connecting a keyboard/mouse to the raspberry pi would be cumbersome and not very user-friendly. We therefore have begun following the directions of a tutorial that shows how to configure the raspberry pi to broadcast a wifi hotspot if it cannot connect to a previously configured network. The tutorial can be found at: http://www.raspberryconnect.com/network/item/330-raspberry-pi-auto-wifi-hotspot-switch-internet
+
+The tutorial was not completed by the end of the day, and no tests were performed to asess how successful the solution might be.
