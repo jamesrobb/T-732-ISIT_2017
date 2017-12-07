@@ -4,11 +4,13 @@ import configparser
 
 from flask import Flask
 from flask import jsonify
+from flask_cors import CORS
 
 IMG_BASE_DIR = "images"
 CONFIG_FILE = "config.cfg"
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def hello_world():
