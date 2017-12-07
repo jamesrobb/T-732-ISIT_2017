@@ -32,3 +32,13 @@ We talked to a picture frame company that will make our frame to house the scree
 Started to address the problem of how to provide a somewhat user-friendly way of interfacing with the digital picture frame. A user should be able to easily connect the picture frame to the local wifi network and then interact with it through that. Connecting a keyboard/mouse to the raspberry pi would be cumbersome and not very user-friendly. We therefore have begun following the directions of a tutorial that shows how to configure the raspberry pi to broadcast a wifi hotspot if it cannot connect to a previously configured network. The tutorial can be found at: http://www.raspberryconnect.com/network/item/330-raspberry-pi-auto-wifi-hotspot-switch-internet
 
 The tutorial was not completed by the end of the day, and no tests were performed to asess how successful the solution might be.
+
+## 07/12/2017
+
+Began with finish tutorial from last time. The tutorial works as expected, but some effort needs to be put into making it more user friendly. Current idea is to create a small web page to allow the user to select what wifi network to connect to.
+
+A flask (mini python web framework) server was installed and an endpoint was added that returns a list of images in the picture frames image repository. The picture frame will be configured to look at one directory or all, and the endpoint returns the corresponding images.
+
+A flask based file-manager named browsepy was explored, but unfortunately its upload functionality was poor, and it did not offer the ability to create directories. The current idea is to provide a page that instructs the user to configure a browser based FTP solution for managing the pictures.
+
+We have begun to experiment with "supersized" (https://github.com/buildinternet/supersized), an html/javascript slideshow. We have modified it to accept the list of images it displays from our flask endpoint, and to switch over to a new image set gracefully. The changes to supersized's code can be seen in the git log.
