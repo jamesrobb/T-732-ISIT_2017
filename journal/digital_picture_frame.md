@@ -42,3 +42,11 @@ A flask (mini python web framework) server was installed and an endpoint was add
 A flask based file-manager named browsepy was explored, but unfortunately its upload functionality was poor, and it did not offer the ability to create directories. The current idea is to provide a page that instructs the user to configure a browser based FTP solution for managing the pictures.
 
 We have begun to experiment with "supersized" (https://github.com/buildinternet/supersized), an html/javascript slideshow. We have modified it to accept the list of images it displays from our flask endpoint, and to switch over to a new image set gracefully. The changes to supersized's code can be seen in the git log.
+
+## 08/12/2017
+
+We examined the eDP connect pin diagram to determine if it was possible to control the brightness of the screen from the raspberry pi. We learned that we could send a PWM signal of 0-5V on pin 8 to control the brightness of the screen. A logic level shifter was used to generate a 0-5V signal as the pi only has 3.3V GPIO pins. The brightness of the screen can now be controller via software on the pi.
+
+We started looking for ways to easily display the wifi signals in the area so the user could configure the picture frame to connect to their home network. Since we are using python for all other scripting so far we tried the wifi module in PIP but for some reason it only showed us the currently connected network if not run as sudo (the underlying executable `iwlist` wants to be run as sudo to show all networks while currently connected to one). A solution will need to be found for this.
+
+The first step of the web interface was done by displaying all the directories available for the user to choose pictures from.
