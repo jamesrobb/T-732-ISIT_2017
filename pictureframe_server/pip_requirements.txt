@@ -1,2 +1,3 @@
 Flask
 browsepy
+flask_cors
