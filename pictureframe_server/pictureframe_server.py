@@ -35,12 +35,13 @@ def read_config():
 
 
 def save_dir(img_dir):
+    """ Save a image current image directory to config file. """
     if not os.path.isdir(os.path.join(IMG_BASE_DIR, img_dir)) and img_dir != "All":
         return False
 
     config = configparser.ConfigParser()
     config = read_config()
-    # If path = All we set the path to "" else the directory the user requested
+    # If img_dir equals "All" we set the path to "" else the directory the user requested
     config["DEFAULT"]["current_image_dir"] = "" if img_dir == "All" else img_dir
 
     with open(CONFIG_FILE, "w") as config_file:
@@ -63,9 +64,11 @@ def get_base_directories():
 
 @app.route('/')
 def index():
+    current_image_dir = read_config()["DEFAULT"]["current_image_dir"]
+    current_image_dir = "All" if current_image_dir == "" else current_image_dir
     directories = get_base_directories()
     directories.insert(0, "All")
-    return render_template('index.html', dirTarget="All", directories=directories)
+    return render_template('index.html', dirTarget=current_image_dir, directories=directories)
 
 
 @app.route('/config')
@@ -105,8 +108,8 @@ def get_images():
 @app.route('/save_img_dir', methods=['POST'])
 def save_img_dir():
     dir =  request.form['directory']
+    print("The directory body request: {}".format(dir))
     
-    #TODO: Need to validate that dir is valid and write it to config file.
     if save_dir(dir):
         return jsonify({'status':'OK','directory': dir})
     else:
