@@ -1,24 +1,39 @@
-<!doctype html>
-<title>Hello from Flask</title>
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
-{% else %}
-  <h1>Hello, World!</h1>
-{% endif %}
 
-<ul id="navigation">
-    {% for item in directories %}
-        <li>{{ item }}</li>
-    {% endfor %}
-</ul>
+{% extends "base.html" %}
+{% block content %}
+<script>
+    $(function() {
+        $('button').click(function() {
+            $.ajax({
+                url: '/save_img_dir',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
 
-
-<select name="select_directorie">
-    {% for key in directories %}
-        <option value="{{ key }}" 
-        {% if (key == target) %} selected="selected" {% endif %}
-        >
-        {{ key }}
-        </option>
-    {% endfor %}
-</select>
+<form action="/save_img_dir" method="post" name="save_img_dir" role="form">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+        <label for="directory">Directory</label>
+        <select name="directory" class="custom-select">
+            {% for dir in directories %}
+                <option value="{{ dir }}" 
+                {% if (dir == dirTarget) %} selected="selected" {% endif %}
+                >
+                {{ dir }}
+                </option>
+            {% endfor %}
+        </select>
+        </div>
+    </div>
+    <button class="btn btn-dark" type="button">Save</button>
+</form>
+{% endblock %}
