@@ -35,12 +35,13 @@ def read_config():
 
 
 def save_dir(img_dir):
-    if not os.path.isdir(os.path.join(IMG_BASE_DIR, img_dir)):
+    if not os.path.isdir(os.path.join(IMG_BASE_DIR, img_dir)) and img_dir != "All":
         return False
 
     config = configparser.ConfigParser()
     config = read_config()
-    config["DEFAULT"]["current_image_dir"] = img_dir
+    # If path = All we set the path to "" else the directory the user requested
+    config["DEFAULT"]["current_image_dir"] = "" if img_dir == "All" else img_dir
 
     with open(CONFIG_FILE, "w") as config_file:
         config.write(config_file)
@@ -64,7 +65,7 @@ def get_base_directories():
 def index():
     directories = get_base_directories()
     directories.insert(0, "All")
-    return render_template('hello.html', dirTarget="All", directories=directories)
+    return render_template('index.html', dirTarget="All", directories=directories)
 
 
 @app.route('/config')
