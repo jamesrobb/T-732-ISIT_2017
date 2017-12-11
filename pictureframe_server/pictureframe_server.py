@@ -110,8 +110,7 @@ def get_images():
     images = []
 
     if (not os.path.isdir(directories[0])) or current_image_dir == "":
-        directories = []
-
+        directories = [IMG_BASE_DIR]
         for obj in os.listdir(IMG_BASE_DIR):
 
             if os.path.isdir(os.path.join(IMG_BASE_DIR, obj)):
