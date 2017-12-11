@@ -78,8 +78,11 @@ def create_wpa_password(ssid, pw):
 
 
 def get_ip_address(adapter):
-    ni.ifaddresses(adapter)
-    return ni.ifaddresses(adapter)[ni.AF_INET][0]['addr']
+    inet = ni.ifaddresses(adapter)
+    if ni.AF_INET in inet:
+        return inet[ni.AF_INET][0]['addr']
+    else:
+        return "No ip found"
 
 
 
