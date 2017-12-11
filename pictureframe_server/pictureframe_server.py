@@ -1,6 +1,7 @@
 import os
 import socket
 import configparser
+import hashlib
 
 from flask import Flask
 from flask import jsonify
@@ -8,7 +9,7 @@ from flask import render_template
 from flask import request
 from flask_cors import CORS
 
-IMG_BASE_DIR = "./static/slideshow_images"
+IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
 
 app = Flask(__name__)
@@ -84,6 +85,7 @@ def get_images():
     current_image_dir = pictureframe_config["DEFAULT"]["current_image_dir"]
     directories = [os.path.join(IMG_BASE_DIR, current_image_dir)]
     images = []
+    checksum = hashlib.md5()
 
     if (not os.path.isdir(directories[0])) or current_image_dir == "":
         directories = []
@@ -100,9 +102,11 @@ def get_images():
             file = os.path.join(directory, base_file)
             if os.path.isfile(file):
                 img_obj = {"image": file, "title": "", "thumbnail": "", "url": ""}
+                checksum.update(file.encode("utf-8"))
                 images.append(img_obj)
 
-    return jsonify(images)
+    response = {"checksum": checksum.hexdigest(), "images": images}
+    return jsonify(response)
 
 @app.route('/slideshow')
 def slideshow():

@@ -850,6 +850,16 @@
 			
 			// Call theme function for after slide transition
 			if (typeof theme != 'undefined' && typeof theme.afterAnimation == "function" ) theme.afterAnimation();
+
+			if (base.options.img_refresh_callback != null) {
+				vars.imgs_since_refresh += 1;
+
+				if(vars.imgs_since_refresh >= base.options.imgs_before_refresh) {
+					vars.imgs_since_refresh = 0;
+					console.log("calling image refresh callback");
+					base.options.img_refresh_callback();
+				}
+			}
 			
 			return false;
 		
@@ -880,7 +890,8 @@
 		hover_pause				:	false,		// If slideshow is paused from hover
 		slideshow_interval		:	false,		// Stores slideshow timer					
 		update_images 			: 	false,		// Trigger to update images after slide jump
-		options					:	{}			// Stores assembled options list
+		options					:	{},			// Stores assembled options list
+		imgs_since_refresh      :   0           // how many images have we since last refresh check
 		
 	};
 	
@@ -917,7 +928,9 @@
 		// Components							
 		slide_links				:	1,			// Individual links for each slide (Options: false, 'num', 'name', 'blank')
 		thumb_links				:	1,			// Individual thumb links for each slide
-		thumbnail_navigation    :   0			// Thumbnail navigation
+		thumbnail_navigation    :   0,			// Thumbnail navigation
+		img_refresh_callback    :   null,       // image refresh callback
+		imgs_before_refresh     :   3           // number of images to see before doing a refresh check
     	
     };
     

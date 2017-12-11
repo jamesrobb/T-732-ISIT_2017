@@ -12,14 +12,16 @@
 		<script type="text/javascript" src="/static/js/jquery-1.6.min.js"></script>
 		<script type="text/javascript" src="/static/js/jquery.easing.min.js"></script>
 		
-		<script type="text/javascript" src="/static/js/supersized.3.2.7.min.js"></script>
+		<script type="text/javascript" src="/static/js/supersized.3.2.7.js"></script>
 		<script type="text/javascript" src="/static/theme/supersized.shutter.min.js"></script>
 
 		<script type="text/javascript">
 			
 			live_slides = [];
+			first_load = true;
+			checksum = "";
 			
-			function createSuperSize() {
+			function initialize_slideshow() {
 				
 				$.supersized({
 				
@@ -30,13 +32,15 @@
 															   
 					// Components							
 					slide_links				:	'false',	// Individual links for each slide (Options: false, 'num', 'name', 'blank')
-					slides 					:  	live_slides
+					slides 					:  	live_slides,
+					img_refresh_callback    :   get_image_list
 				});
 		    
 		    }
 
 			
 		    var get_image_list = function() {
+
 				//http://apis.is/cyclecounter
 				$.ajax({
 					url: "http://localhost:5000/get_images",
@@ -45,23 +49,37 @@
 					success: function(response){
 						console.log("Success");
 						console.log(response);
-						live_slides = response;
-						$("#supersized").empty();
-						createSuperSize();
+
+						if(first_load) {
+
+							live_slides = response["images"];
+							checksum = response["checksum"];
+							first_load = false;
+							initialize_slideshow();
+
+						} else {
+
+							if(checksum != response["checksum"]) {
+								location.reload();
+							}
+
+						}
 					}
+
 				}).done(function() {
 					console.log("It's done");
 				}).fail(function(err) {
 					console.log("It failed");
 					console.log({err: err});
-				});				
+				});
+
 			}
 
 
 			$(document).ready(function() {
 				get_image_list();
 
-				setTimeout(get_image_list, 10000);
+				//setInterval(get_image_list, 5000);
 			});
 			//get_image_list();
 			
