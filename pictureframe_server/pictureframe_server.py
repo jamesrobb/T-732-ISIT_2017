@@ -2,6 +2,8 @@ import os
 import socket
 import configparser
 import hashlib
+import subprocess
+import netifaces as ni
 
 from flask import Flask
 from flask import jsonify
@@ -36,7 +38,7 @@ def read_config():
 
 
 def save_dir(img_dir):
-    """ Save a image current image directory to config file. """
+    """ Save what image directory the user has chosen to config. """
     if not os.path.isdir(os.path.join(IMG_BASE_DIR, img_dir)) and img_dir != "All":
         return False
 
@@ -61,6 +63,28 @@ def get_base_directories():
         if os.path.isdir(os.path.join(IMG_BASE_DIR, obj)):
             directories.append(obj)
     return directories
+
+
+def get_wifi():
+    process = subprocess.Popen(["sudo /sbin/iwlist wlan0 scan | grep SSID | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g' | sort | uniq"], stdout=subprocess.PIPE, shell=True)
+    wifi = process.communicate()[0].strip()
+    return wifi.decode("utf-8").split('\n')
+
+
+def create_wpa_password(ssid, pw):
+    command = "wpa_passphrase \"{}\" \"{}\"".format(ssid, pw)
+    process = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+    data = process.communicate()[0].strip()
+    return data.decode("utf-8").split('\n')
+
+
+def get_ip_address(adapter):
+    inet = ni.ifaddresses(adapter)
+    if ni.AF_INET in inet:
+        return inet[ni.AF_INET][0]['addr']
+    else:
+        return "No ip found"
+
 
 
 @app.route('/')
@@ -88,8 +112,7 @@ def get_images():
     checksum = hashlib.md5()
 
     if (not os.path.isdir(directories[0])) or current_image_dir == "":
-        directories = []
-
+        directories = [IMG_BASE_DIR]
         for obj in os.listdir(IMG_BASE_DIR):
 
             if os.path.isdir(os.path.join(IMG_BASE_DIR, obj)):

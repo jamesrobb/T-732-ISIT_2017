@@ -1,3 +1,4 @@
 Flask
 browsepy
 flask_cors
+netifaces
