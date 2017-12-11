@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 
-<ul>
-    {% for ssid in wifi%}
-        <li> {{ ssid }} </li>
-    {% endfor %}
-</ul>
+	{% if ssid == "" %}
+		No SSID found.
+	{% else %}
+		{{ ssid }}
+	{% endif %}
+	<br />
+	{% if ip == "0.0.0.0" %}
+		No ip address found. You likely are not connected to a network, or experiencing a connection issue.
+	{% else %}
+		{{ ip }}
+	{% endif %}
 
 {% endblock %}

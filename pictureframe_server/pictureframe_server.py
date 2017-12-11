@@ -13,6 +13,7 @@ from flask_cors import CORS
 
 IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
+ADAPTOR = "wlp2s0"
 
 app = Flask(__name__)
 CORS(app)
@@ -65,11 +66,15 @@ def get_base_directories():
     return directories
 
 
-def get_wifi():
-    process = subprocess.Popen(["/sbin/iwlist wlan0 scan | grep SSID | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g' | sort | uniq"], stdout=subprocess.PIPE, shell=True)
+def get_all_ssids():
+    process = subprocess.Popen(["sudo /sbin/iwlist wlan0 scan | grep SSID | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g' | sort | uniq"], stdout=subprocess.PIPE, shell=True)
     wifi = process.communicate()[0].strip()
     return wifi.decode("utf-8").split('\n')
 
+def get_current_ssid():
+    process = subprocess.Popen(["/sbin/iwgetid | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g'"], stdout=subprocess.PIPE, shell=True)
+    ssid = process.communicate()[0].strip()
+    return ssid.decode("utf-8")
 
 def create_wpa_password(ssid, pw):
     command = "wpa_passphrase \"{}\" \"{}\"".format(ssid, pw)
@@ -83,7 +88,7 @@ def get_ip_address(adapter):
     if ni.AF_INET in inet:
         return inet[ni.AF_INET][0]['addr']
     else:
-        return "No ip found"
+        return "0.0.0.0"
 
 @app.route('/')
 def index():
@@ -146,10 +151,11 @@ def save_img_dir():
 
 @app.route('/wifi')
 def wifi():
-    wifi = get_wifi()
-    return render_template('wifi.html', wifi=wifi)
+    ssid = get_current_ssid()
+    ip = get_ip_address(ADAPTOR)
+    return render_template('wifi.html', ssid=ssid, ip=ip)
 
 @app.route('/get_ip')
 def get_ip():
-    ip = get_ip_address("wlan0")
+    ip = get_ip_address(ADAPTOR)
     return jsonify({'status': 'OK', 'ip': ip})
