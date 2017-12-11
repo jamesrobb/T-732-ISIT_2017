@@ -1,6 +1,8 @@
 import os
 import socket
 import configparser
+import subprocess
+import netifaces as ni
 
 from flask import Flask
 from flask import jsonify
@@ -62,6 +64,25 @@ def get_base_directories():
     return directories
 
 
+def get_wifi():
+    process = subprocess.Popen(["sudo /sbin/iwlist wlan0 scan | grep SSID | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g' | sort | uniq"], stdout=subprocess.PIPE, shell=True)
+    wifi = process.communicate()[0].strip()
+    return wifi.decode("utf-8").split('\n')
+
+
+def create_wpa_password(ssid, pw):
+    command = "wpa_passphrase \"{}\" \"{}\"".format(ssid, pw)
+    process = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+    data = process.communicate()[0].strip()
+    return data.decode("utf-8").split('\n')
+
+
+def get_ip_address(adapter):
+    ni.ifaddresses(adapter)
+    return ni.ifaddresses(adapter)[ni.AF_INET][0]['addr']
+
+
+
 @app.route('/')
 def index():
     current_image_dir = read_config()["DEFAULT"]["current_image_dir"]
@@ -104,9 +125,11 @@ def get_images():
 
     return jsonify(images)
 
+
 @app.route('/slideshow')
 def slideshow():
     return render_template('slideshow.html')
+
 
 @app.route('/save_img_dir', methods=['POST'])
 def save_img_dir():
@@ -118,3 +141,13 @@ def save_img_dir():
     else:
         return jsonify({'status': 400, 'directory': dir})
 
+
+@app.route('/wifi')
+def wifi():
+    wifi = get_wifi()
+    return render_template('wifi.html', wifi=wifi)
+
+@app.route('/get_ip')
+def get_ip():
+    ip = get_ip_address("wlan0")
+    return jsonify({'status': 'OK', 'ip': ip})

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+<ul>
+    {% for ssid in wifi%}
+        <li> {{ ssid }} </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
