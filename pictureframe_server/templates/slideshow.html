@@ -38,6 +38,13 @@
 		    
 		    }
 
+		    function shuffle(a) {
+			    for (let i = a.length - 1; i > 0; i--) {
+			        const j = Math.floor(Math.random() * (i + 1));
+			        [a[i], a[j]] = [a[j], a[i]];
+			    }
+			    return a;
+			}
 			
 		    var get_image_list = function() {
 
@@ -52,7 +59,7 @@
 
 						if(first_load) {
 
-							live_slides = response["images"];
+							live_slides = shuffle(response["images"]);
 							checksum = response["checksum"];
 							first_load = false;
 							initialize_slideshow();
