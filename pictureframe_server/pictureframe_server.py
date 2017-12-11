@@ -35,7 +35,7 @@ def read_config():
 
 
 def save_dir(img_dir):
-    """ Save a image current image directory to config file. """
+    """ Save what image directory the user has chosen to config. """
     if not os.path.isdir(os.path.join(IMG_BASE_DIR, img_dir)) and img_dir != "All":
         return False
 
