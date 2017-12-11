@@ -66,7 +66,7 @@ def get_base_directories():
 
 
 def get_wifi():
-    process = subprocess.Popen(["sudo /sbin/iwlist wlan0 scan | grep SSID | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g' | sort | uniq"], stdout=subprocess.PIPE, shell=True)
+    process = subprocess.Popen(["/sbin/iwlist wlan0 scan | grep SSID | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g' | sort | uniq"], stdout=subprocess.PIPE, shell=True)
     wifi = process.communicate()[0].strip()
     return wifi.decode("utf-8").split('\n')
 
@@ -84,8 +84,6 @@ def get_ip_address(adapter):
         return inet[ni.AF_INET][0]['addr']
     else:
         return "No ip found"
-
-
 
 @app.route('/')
 def index():
@@ -145,3 +143,13 @@ def save_img_dir():
     else:
         return jsonify({'status': 400, 'directory': dir})
 
+
+@app.route('/wifi')
+def wifi():
+    wifi = get_wifi()
+    return render_template('wifi.html', wifi=wifi)
+
+@app.route('/get_ip')
+def get_ip():
+    ip = get_ip_address("wlan0")
+    return jsonify({'status': 'OK', 'ip': ip})
