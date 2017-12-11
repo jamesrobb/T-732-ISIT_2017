@@ -8,7 +8,7 @@ from flask import render_template
 from flask import request
 from flask_cors import CORS
 
-IMG_BASE_DIR = "images"
+IMG_BASE_DIR = "./static/slideshow_images"
 CONFIG_FILE = "config.cfg"
 
 app = Flask(__name__)
@@ -104,6 +104,9 @@ def get_images():
 
     return jsonify(images)
 
+@app.route('/slideshow')
+def slideshow():
+    return render_template('slideshow.html')
 
 @app.route('/save_img_dir', methods=['POST'])
 def save_img_dir():
