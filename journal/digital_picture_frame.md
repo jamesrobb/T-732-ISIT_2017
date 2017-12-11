@@ -50,3 +50,13 @@ We examined the eDP connect pin diagram to determine if it was possible to contr
 We started looking for ways to easily display the wifi signals in the area so the user could configure the picture frame to connect to their home network. Since we are using python for all other scripting so far we tried the wifi module in PIP but for some reason it only showed us the currently connected network if not run as sudo (the underlying executable `iwlist` wants to be run as sudo to show all networks while currently connected to one). A solution will need to be found for this.
 
 The first step of the web interface was done by displaying all the directories available for the user to choose pictures from.
+
+## 11/12/2017
+
+Today kiosk mode for the chromium web browser was explored to see if it would work well for displaying the web slide show. It works as one would expect. A package was installed on the raspberry pi called `unclutter` that hides the mouse pointer if it is not moved for some period of time (in our case half a second).
+
+API endpoints were added to the flask application to get the SSID of the currently conected network, and the IP address of the raspberry pi. The goal of having the pi act as a hotspot until a network connection can be configured has been abandoned as the methods we have seen so far are error prone and cumbersome. We will address this by having a page that appears for some amount of time on boot instructing the user how to connect a mouse and keyboard to configure the wifi.
+
+The slideshow was updated to check for new images after dispalying x amount of images (currently x=3). When it checks for new images, the flask application it requests images from will return a checksum along with a list of images. If the checksum is different the one the slideshow had seen previously it will reload the web page. We attempted to modify the slideshow so that a completely seemless transition from the current set of images to a new set of images would take place, but we ran into many road blocks. The animations would speed up and become erratic, and we could not determine why. Given how often a user is likely to update the images or change the images to be display, this solution will perfomr adequately.
+
+We test a component Hannes Pall gave us to step down 12VDC to 5VDC, however the component appears to step voltage up. We will consult with him tomorrow on how to step down the 12VDC to 5VDC so that we can power the pi on the same power supply as the screen controller.
