@@ -62,3 +62,12 @@ The slideshow was updated to check for new images after dispalying x amount of i
 We test a component Hannes Pall gave us to step down 12VDC to 5VDC, however the component appears to step voltage up. We will consult with him tomorrow on how to step down the 12VDC to 5VDC so that we can power the pi on the same power supply as the screen controller.
 
 https://www.danpurdy.co.uk/web-development/raspberry-pi-kiosk-screen-tutorial/
+
+## 12/12/2017
+
+We attempted to use the dc-dc converter so that we would be able to use one power supply to power both devices. Since we came to the conclusion yesterday that the converter stepped up the voltage we tried using it to step up 5V to 12V to power the controller for the screen. Unfortunately the dc-dc converter doesn't seem to be able to supply enough amperage to keep the screen running at fully bightness, the screen just starts to reset as the controller does not get a stable supply of power.
+
+We hooked up the TSL2591 sensor and tested it with a python module (https://github.com/maxlklaxl/python-tsl2591) to make sure everything worked. We tested if some clear acrylic could act as a conduit to pass enough light through the frame to be able to get a good reading but the that did not work as we wanted.
+
+The frame was routed to be able to fit the screen inside with the glass. The screen had some small metal lips that also needed to be cut off, but in the end it fit snugly.
+
