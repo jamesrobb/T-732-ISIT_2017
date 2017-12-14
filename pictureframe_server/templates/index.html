@@ -72,24 +72,28 @@
                     </div>
                     <div class="card-block">
                         <div class="col-md-12">
-                                {% if params["ssid"] == "" %}
-                                    <p class="card-text">No SSID found.</p>
-                                {% else %}
-                                    <p class="card-text">SSID: {{ params["ssid"] }}</p>
-                                {% endif %}
+                                <p class="card-text">
+                                    {% if params["ssid"] == "" %}
+                                        No SSID found.
+                                    {% else %}
+                                        SSID: {{ params["ssid"] }}
+                                    {% endif %}
+                                </p>
                             </div>
                             <br />
                             <div class="col-md-12">
-                                {% if params["ip"] == "0.0.0.0" %}
-                                    <p class="card-text">No ip address found. You likely are not connected to a network, or experiencing a connection issue.</p>
-                                {% else %}
-                                    <p class="card-text">IP Address: {{ params["ip"] }}</p>
-                                {% endif %}
+                                <p class="card-text">
+                                    {% if params["ip"] == "0.0.0.0" %}
+                                        No ip address found. You likely are not connected to a network, or experiencing a connection issue.
+                                    {% else %}
+                                        IP Address: {{ params["ip"] }}
+                                    {% endif %}
+                                </p>
                             </div>
                     </div>
                     <br />
                     <div class="card-footer text-muted">
-                        Network satus:
+                        Network status:
                         {% if params["ssid"] != "" and params["ip"] != "0.0.0.0" %}
                             connected
                         {% else %}
