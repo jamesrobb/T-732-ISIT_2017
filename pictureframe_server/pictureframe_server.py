@@ -11,12 +11,13 @@ from flask import render_template
 from flask import request
 from flask_cors import CORS
 
+APP_FILE_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
 IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
 ADAPTOR = "wlan0"
 
 app = Flask(__name__)
-CORS(app)
+app.debug = True
 
 
 def initial_config():
