@@ -164,8 +164,8 @@ def get_images():
                 img_obj = {"image": file, "title": "", "thumbnail": "", "url": ""}
                 checksum.update(file.encode("utf-8"))
                 images.append(img_obj)
-
-    response = {"checksum": checksum.hexdigest(), "images": images}
+    slide_interval = read_config["DEFAULT"]["slide_interval"]
+    response = {"checksum": checksum.hexdigest(), "slide_interval": slide_interval , "images": images}
     return jsonify(response)
 
 @app.route('/slideshow')
