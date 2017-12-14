@@ -1,39 +1,40 @@
 
 {% extends "base.html" %}
 {% block content %}
-<script>
-    $(function() {
-        $('button').click(function() {
-            $.ajax({
-                url: '/save_img_dir',
-                data: $('form').serialize(),
-                type: 'POST',
-                success: function(response) {
-                    console.log(response);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        });
-    });
-</script>
 
-<form action="/save_img_dir" method="post" name="save_img_dir" role="form">
-    <div class="row">
-        <div class="col-md-6 mb-3">
-        <label for="directory">Directory</label>
-        <select name="directory" class="custom-select">
-            {% for dir in directories %}
-                <option value="{{ dir }}" 
-                {% if (dir == dirTarget) %} selected="selected" {% endif %}
-                >
-                {{ dir }}
-                </option>
-            {% endfor %}
-        </select>
+<!-- Header -->
+<header class="masthead">
+    <div class="container">
+        <div class="intro-text">
+            <form action="/save_img_dir" method="post" name="save_img_dir" role="form">
+                <div class="col-md-6 mb-3">
+                    <h3>Settings:</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="directory">Directory </label>
+                        <select name="directory" class="custom-select">
+                            {% for dir in directories %}
+                                <option value="{{ dir }}" 
+                                {% if (dir == dirTarget) %} selected="selected" {% endif %}
+                                >
+                                {{ dir }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-dark" type="button">Save</button>
+                    </div>   
+                </div>
+
+            </form>
         </div>
+        
     </div>
-    <button class="btn btn-dark" type="button">Save</button>
-</form>
+</header>
+
 {% endblock %}
+
+
+
+
+

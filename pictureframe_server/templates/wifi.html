@@ -1,16 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-
-	{% if ssid == "" %}
-		No SSID found.
-	{% else %}
-		{{ ssid }}
-	{% endif %}
-	<br />
-	{% if ip == "0.0.0.0" %}
-		No ip address found. You likely are not connected to a network, or experiencing a connection issue.
-	{% else %}
-		{{ ip }}
-	{% endif %}
-
+<!-- Header -->
+<header class="masthead">
+		<div class="container">
+			<div class="intro-text">
+				{% if ssid == "" %}
+					<h3>No SSID found.</h3>
+				{% else %}
+					<h3>{{ ssid }}</h3>
+				{% endif %}
+				<br />
+				{% if ip == "0.0.0.0" %}
+					<h3>No ip address found. You likely are not connected to a network, or experiencing a connection issue.</h3>
+				{% else %}
+					<h3>{{ ip }}</h3>
+				{% endif %}
+			</div>
+			
+		</div>
+	</header>
 {% endblock %}
