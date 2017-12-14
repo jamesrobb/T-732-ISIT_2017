@@ -2,19 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Bootstrap core css -->
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+    <!-- Agency styles from template -->
+    <link rel="stylesheet" href="/static/css/agency.css">
+
+    
+    <title>Picture Frame</title>
+</head>
+<body id="page-top h-100">
+        
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="/">Picture frame</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="wifi">Connecting to Wifi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="upload">Uploading pictures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/slideshow">Slideshow</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+                
+    {% block content %}{% endblock %}
+                
+
+
+    <!-- bootstrap core JS -->
     <script src="/static/js/jquery-3.2.1.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-    <title>Picture Frame</title>
-</head>
-<body>
-    <br/>
-    <br/>
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+
+    <!-- Agency core JS from template -->
+    <script src="/static/js/agency.min.js"></script>
+
+    <!-- Extra scripts manually added -->
+    <script>
+        $(function() {
+            $('button').click(function() {
+                $.ajax({
+                    url: '/save_img_dir',
+                    data: $('form').serialize(),
+                    type: 'POST',
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
