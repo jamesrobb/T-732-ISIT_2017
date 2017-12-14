@@ -32,7 +32,7 @@
                         </form>
                         <br />
                     </div>
-                    <div class="card-footer text-muted">
+                    <div class="card-footer text-muted" id="curr_directory">
                         Current directory: {{ params["current_image_dir"] }}
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                                         <div class="input-group col-sm-12">
                                             <input name="slide_interval" type="number" class="form-control" placeholder="{{ params["slide_interval"]}}" >
                                             <span class="input-group-btn">
-                                                <button class="btn btn-dark" type="button" id="save_interval">Save</button>
+                                                <button class="btn btn-dark" type="submit" id="save_interval">Save</button>
                                             </span>
                                         </div>
                                     </div>
@@ -60,7 +60,7 @@
                             <br />
                         </form>
                     </div>
-                    <div class="card-footer text-muted">
+                    <div class="card-footer text-muted" id="curr_slide_interval">
                         Current image interval: {{ params["slide_interval"] }}
                     </div>
                 </div>
