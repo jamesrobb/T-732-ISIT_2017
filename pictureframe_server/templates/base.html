@@ -58,9 +58,25 @@
     <!-- Extra scripts manually added -->
     <script>
         $(function() {
-            $('button').click(function() {
+            $('#save_directory').click(function() {
                 $.ajax({
                     url: '/save_img_dir',
+                    data: $('form').serialize(),
+                    type: 'POST',
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+
+        $(function() {
+            $('#save_interval').click(function() {
+                $.ajax({
+                    url: '/slide_interval',
                     data: $('form').serialize(),
                     type: 'POST',
                     success: function(response) {

@@ -2,35 +2,106 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Header -->
-<header class="masthead">
+<section id="contact">
     <div class="container">
-        <div class="intro-text">
-            <form action="/save_img_dir" method="post" name="save_img_dir" role="form">
-                <div class="col-md-6 mb-3">
-                    <h3>Settings:</h3>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-header">
+                        Image directory
+                    </div>
+                    <div class="card-block">
+                        <p class="card-text"> Directory to show images from.</p>
+                        <form action="/save_img_dir" method="post" name="save_img_dir" role="form" class="form-inline">
+                            <div class="row">
+                                <div class="col-sm-offset-1 col-lg-11">
+                                    <div class="input-group col-sm-12">
+                                        <select name="directory" class="custom-select col-sm-6">
+                                            {% for dir in params["directories"] %}
+                                                <option value="{{ dir }}" 
+                                                {% if (dir == params["current_image_dir"]) %} selected="selected" {% endif %}
+                                                >
+                                                {{ dir }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button class="btn btn-dark" type="button" id="save_directory">Save</button>
+                                    </div>
+                                </div>   
+                            </div>
+                        </form>
+                        <br />
+                    </div>
+                    <div class="card-footer text-muted">
+                        Current directory: {{ params["current_image_dir"] }}
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="directory">Directory </label>
-                        <select name="directory" class="custom-select">
-                            {% for dir in directories %}
-                                <option value="{{ dir }}" 
-                                {% if (dir == dirTarget) %} selected="selected" {% endif %}
-                                >
-                                {{ dir }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <button class="btn btn-dark" type="button">Save</button>
-                    </div>   
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-header">
+                        Image slide interval
+                    </div>
+                    <div class="card-block">
+                        <p class="card-text"> How long should each photo be displayed.</p>
+                        <form action="/save_slide_interval" method="post" name="save_slide_interval" role="form">
+                            <div class="row">
+                                <div class="col-sm-offset-1 col-lg-11">
+                                    <div class="input-group">
+                                        <div class="input-group col-sm-12">
+                                            <input name="slide_interval" type="number" class="form-control" placeholder="{{ params["slide_interval"]}}" >
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-dark" type="button" id="save_interval">Save</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                            <br />
+                        </form>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Current image interval: {{ params["slide_interval"] }}
+                    </div>
                 </div>
-
-            </form>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-header">
+                            Network status
+                    </div>
+                    <div class="card-block">
+                        <div class="col-md-12">
+                                {% if params["ssid"] == "" %}
+                                    <p class="card-text">No SSID found.</p>
+                                {% else %}
+                                    <p class="card-text">SSID: {{ params["ssid"] }}</p>
+                                {% endif %}
+                            </div>
+                            <br />
+                            <div class="col-md-12">
+                                {% if params["ip"] == "0.0.0.0" %}
+                                    <p class="card-text">No ip address found. You likely are not connected to a network, or experiencing a connection issue.</p>
+                                {% else %}
+                                    <p class="card-text">IP Address: {{ params["ip"] }}</p>
+                                {% endif %}
+                            </div>
+                    </div>
+                    <br />
+                    <div class="card-footer text-muted">
+                        Network satus:
+                        {% if params["ssid"] != "" and params["ip"] != "0.0.0.0" %}
+                            connected
+                        {% else %}
+                            not connected
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        
+
     </div>
-</header>
+</section>
 
 {% endblock %}
 
