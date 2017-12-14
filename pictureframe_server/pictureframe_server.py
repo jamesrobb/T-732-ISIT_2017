@@ -23,6 +23,7 @@ def initial_config():
     config = configparser.ConfigParser()
 
     config["DEFAULT"] = {"current_image_dir":""}
+    config["DEFAULT"] = {"slide_interval":"7"}
 
     with open(CONFIG_FILE, "w") as config_file:
         config.write(config_file)
@@ -51,6 +52,22 @@ def save_dir(img_dir):
     with open(CONFIG_FILE, "w") as config_file:
         config.write(config_file)
     
+    return True
+
+
+def save_slide_interval(interval_time):
+    """Saving slide interval to the config file.
+        The interval time is in seconds."""
+    if not isinstance(interval_time, int):
+        return False
+    
+    config = configparser.ConfigParser()
+    config = read_config()
+    config["DEFAULT"]["slide_interval"] = interval_time
+
+    with open(CONFIG_FILE, "w") as config_file:
+            config.write(config_file)
+
     return True
 
 
@@ -97,13 +114,23 @@ def get_ip_address(adapter):
 @app.route('/')
 @app.route('/index')
 def index():
+    params = {}
     # Get current image dir to auto select in selection box
     current_image_dir = read_config()["DEFAULT"]["current_image_dir"]
     current_image_dir = "All" if current_image_dir == "" else current_image_dir
+    params["current_image_dir"] = current_image_dir
     # Get all directories that are available under IMG_BASE_DIR
     directories = get_base_directories()
     directories.insert(0, "All")
-    return render_template('index.html', dirTarget=current_image_dir, directories=directories)
+    params["directories"] = directories
+    # Get network info
+    ssid = get_current_ssid()
+    params["ssid"] = ssid
+    ip = get_ip_address(ADAPTOR)
+    params["ip"] = ip
+    # Get slide interval
+    params["slide_interval"] = read_config()["DEFAULT"]["slide_interval"]
+    return render_template('index.html', params=params)
 
 
 @app.route('/config')
@@ -147,22 +174,27 @@ def slideshow():
 
 @app.route('/save_img_dir', methods=['POST'])
 def save_img_dir():
-    dir =  request.form['directory']
-    print("The directory body request: {}".format(dir))
-    
+    dir =  request.form['directory']    
     if save_dir(dir):
         return jsonify({'status':'OK','directory': dir})
     else:
-        return jsonify({'status': 400, 'directory': dir})
+        return jsonify({'status': 400, 'message': "Directory could not be changed."})
 
 
 @app.route('/wifi')
 def wifi():
-    ssid = get_current_ssid()
-    ip = get_ip_address(ADAPTOR)
-    return render_template('wifi.html', ssid=ssid, ip=ip)
+    return render_template('wifi.html')
 
 @app.route('/get_ip')
 def get_ip():
     ip = get_ip_address(ADAPTOR)
     return jsonify({'status': 'OK', 'ip': ip})
+
+
+@app.route('/slide_interval', methods=['POST'])
+def slide_interval():
+    interval = request.form['slide_interval']
+    if save_slide_interval(interval):
+        return jsonify({'status': 'OK','slide_interval': interval})
+    else:
+        return jsonify({'status': 400, 'message': "Slide interval was not changed."})
