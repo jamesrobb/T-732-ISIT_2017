@@ -1,0 +1,14 @@
+[Unit]
+Description=Pictureframe Brightness
+After=pigpio.service
+
+[Service]
+ExecStart=/usr/bin/brightness_control
+WorkingDirectory=/usr/bin
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

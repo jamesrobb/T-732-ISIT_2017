@@ -59,7 +59,12 @@ API endpoints were added to the flask application to get the SSID of the current
 
 The slideshow was updated to check for new images after dispalying x amount of images (currently x=3). When it checks for new images, the flask application it requests images from will return a checksum along with a list of images. If the checksum is different the one the slideshow had seen previously it will reload the web page. We attempted to modify the slideshow so that a completely seemless transition from the current set of images to a new set of images would take place, but we ran into many road blocks. The animations would speed up and become erratic, and we could not determine why. Given how often a user is likely to update the images or change the images to be display, this solution will perfomr adequately.
 
+<<<<<<< HEAD
 We test a component Hannes Pall gave us to step down 12VDC to 5VDC, however the component appears to step voltage up. We will consult with him tomorrow on how to step down the 12VDC to 5VDC so that we can power the pi on the same power supply as the screen controller.
+=======
+We test a component Hannes Pall gave us to step down 12VDC to 5VDC, however the component appears to step voltage up. We will consult with him tomorrow on how to step down the 12VDC to 5VDC so that we can power the pi on the same power supply as the screen controller.
+
+https://www.danpurdy.co.uk/web-development/raspberry-pi-kiosk-screen-tutorial/
 
 ## 12/12/2017
 
@@ -69,14 +74,4 @@ We hooked up the TSL2591 sensor and tested it with a python module (https://gith
 
 The frame was routed to be able to fit the screen inside with the glass. The screen had some small metal lips that also needed to be cut off, but in the end it fit snugly.
 
-## 13/12/2017
-
-We addressed the power conversion issue with a USB car charger. We used it to down down 12V from the power suplly to 5V for the pi.
-
-We routed out a section of the frame (on the top) to house the light sensor. The idea was to bring the light sensitive portion of the breakout board close enough to the exterior of the frame so that there was a reasonably viewing angle from the sensors perspective. Unfortunately when tested the viewing angle is still not sufficient and so we will remedy this tomorrow.
-
-Despite the viewing angle beinr poor, we wrote a script to adjust the brightness based on the lux value returned from the sensor, and it works quite well. The code will be added to the repo after some more testing, calibrating, and "polishing".
-
-We mounted the glass and screen into the frame, and secured them in place with L-brackets. We obtained a small section of plexi glass from the engineering lab. It was cut to a size needed to mount the pi, the screen controller, and the logic level shifter on it. We drilled holes for the pi and the screen controller so that they could be screwed down to the plexi glass, and the logical level controlelr was affixed to the plexi glass with a epoxy resin (as the logic level converter had no mounting holes). The power supply and the plexi glass with the components were then mounted on the inside of the frame with L-brackets.
-
-With all the components now mounted in the frame, we wired everything up (schematics will follow). Everything powered up as expected.
+>>>>>>> e7fb645bf174783618eda3a9844e4b8d92b91124
