@@ -1,0 +1,69 @@
+#!/usr/bin/python3
+import sys
+import time
+import math
+import pigpio
+import tsl2591
+import logging
+
+# 170.0 is a lux value we observed in a typical office (in Iceland)
+MAX_LUX = 170.0
+MIN_LUX = 0.0
+
+MAX_PWM_VALUE = 1000000
+MIN_PWM_VALUE = 100000
+PWM_INC = 100
+PWM_PIN = 18
+PWM_HZ = 800
+
+def get_lux(tsl_sensor):
+    full, ir = tsl_sensor.get_full_luminosity()
+    lux = tsl_sensor.calculate_lux(full, ir)
+
+    # clamp to max/min lux values
+    if lux > MAX_LUX:
+        lux = MAX_LUX
+    if lux < MIN_LUX:
+        lux = MIN_LUX
+
+    return lux
+
+tsl = tsl2591.Tsl2591()
+pi = pigpio.pi()
+# start at half brightness
+pwm_value = 500000
+
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+logger = logging.getLogger("brightness-logger")
+logger.disabled = True
+
+
+while True:
+    logger.debug("pwm_value: %d" % pwm_value)
+
+    lux = get_lux(tsl)
+    logger.debug("lux: %f" % lux)
+    
+    # 50000 is just a constant so that the exponential decay can reach a full 1000000
+    new_value = (MAX_PWM_VALUE + 50000) * (1 - math.exp(-0.02 * lux))
+    logger.debug("new pwm value: %f" % new_value)
+
+    # round to nearest PWM_INC
+    new_value = int(new_value / float(PWM_INC)) * PWM_INC
+    logger.debug("new pwm value (rounded): %d" % new_value)
+
+    sign = 1 if new_value >= pwm_value else -1
+
+    while new_value != pwm_value:
+        pwm_value += PWM_INC*sign
+
+        if pwm_value < MIN_PWM_VALUE:
+            pwm_value = MIN_PWM_VALUE
+            break
+        if pwm_value > MAX_PWM_VALUE:
+            pwm_value = MAX_PWM_VALUE
+            break
+        
+        pi.hardware_PWM(PWM_PIN, PWM_HZ, pwm_value)
+
+
