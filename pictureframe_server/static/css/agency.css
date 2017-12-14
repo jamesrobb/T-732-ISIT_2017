@@ -14,11 +14,14 @@ p {
 
 a {
   color: #fed136; }
-  a:hover {
-    color: #fec503; }
+a:hover {
+  color: #fec503; }
 
 .text-primary {
   color: #fed136 !important; }
+.text-guide {
+  color: #ced4da;
+}
 
 h1,
 h2,
@@ -442,8 +445,7 @@ header.masthead {
     margin-top: 0; }
 
 section#contact {
-  background-color: #212529;
-  background-image: url("../img/map-image.png");
+  background-color: #292E37;
   background-repeat: no-repeat;
   background-position: center; }
   section#contact .section-heading {
@@ -511,3 +513,10 @@ ul.social-buttons {
     background-color: #212529; }
     ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons li a:hover {
       background-color: #fed136; }
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
