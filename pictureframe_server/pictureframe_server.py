@@ -22,8 +22,7 @@ CORS(app)
 def initial_config():
     config = configparser.ConfigParser()
 
-    config["DEFAULT"] = {"current_image_dir":""}
-    config["DEFAULT"] = {"slide_interval":"7"}
+    config["DEFAULT"] = {"current_image_dir":"", "slide_interval":"7"}
 
     with open(CONFIG_FILE, "w") as config_file:
         config.write(config_file)
@@ -58,7 +57,9 @@ def save_dir(img_dir):
 def save_slide_interval(interval_time):
     """Saving slide interval to the config file.
         The interval time is in seconds."""
-    if not isinstance(interval_time, int):
+    try:
+        new_interval = int(interval_time)
+    except ValueError:
         return False
     
     config = configparser.ConfigParser()
@@ -164,7 +165,8 @@ def get_images():
                 img_obj = {"image": file, "title": "", "thumbnail": "", "url": ""}
                 checksum.update(file.encode("utf-8"))
                 images.append(img_obj)
-    slide_interval = read_config["DEFAULT"]["slide_interval"]
+                
+    slide_interval = read_config()["DEFAULT"]["slide_interval"]
     response = {"checksum": checksum.hexdigest(), "slide_interval": slide_interval , "images": images}
     return jsonify(response)
 
