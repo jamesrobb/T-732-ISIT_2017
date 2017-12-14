@@ -60,5 +60,3 @@ API endpoints were added to the flask application to get the SSID of the current
 The slideshow was updated to check for new images after dispalying x amount of images (currently x=3). When it checks for new images, the flask application it requests images from will return a checksum along with a list of images. If the checksum is different the one the slideshow had seen previously it will reload the web page. We attempted to modify the slideshow so that a completely seemless transition from the current set of images to a new set of images would take place, but we ran into many road blocks. The animations would speed up and become erratic, and we could not determine why. Given how often a user is likely to update the images or change the images to be display, this solution will perfomr adequately.
 
 We test a component Hannes Pall gave us to step down 12VDC to 5VDC, however the component appears to step voltage up. We will consult with him tomorrow on how to step down the 12VDC to 5VDC so that we can power the pi on the same power supply as the screen controller.
-
-https://www.danpurdy.co.uk/web-development/raspberry-pi-kiosk-screen-tutorial/
