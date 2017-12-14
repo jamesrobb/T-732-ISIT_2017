@@ -13,7 +13,7 @@ from flask_cors import CORS
 
 IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
-ADAPTOR = "wlp2s0"
+ADAPTOR = "wlan0"
 
 app = Flask(__name__)
 CORS(app)
@@ -84,16 +84,23 @@ def create_wpa_password(ssid, pw):
 
 
 def get_ip_address(adapter):
+    # Check if the interface exists on the machine running program
+    if adapter not in ni.interfaces():
+        return "0.0.0.0"
     inet = ni.ifaddresses(adapter)
+    # Check if there was any ip
     if ni.AF_INET in inet:
         return inet[ni.AF_INET][0]['addr']
     else:
         return "0.0.0.0"
 
 @app.route('/')
+@app.route('/index')
 def index():
+    # Get current image dir to auto select in selection box
     current_image_dir = read_config()["DEFAULT"]["current_image_dir"]
     current_image_dir = "All" if current_image_dir == "" else current_image_dir
+    # Get all directories that are available under IMG_BASE_DIR
     directories = get_base_directories()
     directories.insert(0, "All")
     return render_template('index.html', dirTarget=current_image_dir, directories=directories)
