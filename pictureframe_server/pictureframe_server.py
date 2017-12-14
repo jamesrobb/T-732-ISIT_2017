@@ -11,12 +11,13 @@ from flask import render_template
 from flask import request
 from flask_cors import CORS
 
+APP_FILE_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
 IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
 ADAPTOR = "wlan0"
 
 app = Flask(__name__)
-CORS(app)
+app.debug = True
 
 
 def initial_config():
@@ -89,10 +90,12 @@ def get_all_ssids():
     wifi = process.communicate()[0].strip()
     return wifi.decode("utf-8").split('\n')
 
+
 def get_current_ssid():
     process = subprocess.Popen(["/sbin/iwgetid | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g'"], stdout=subprocess.PIPE, shell=True)
     ssid = process.communicate()[0].strip()
     return ssid.decode("utf-8")
+
 
 def create_wpa_password(ssid, pw):
     command = "wpa_passphrase \"{}\" \"{}\"".format(ssid, pw)
@@ -111,6 +114,7 @@ def get_ip_address(adapter):
         return inet[ni.AF_INET][0]['addr']
     else:
         return "0.0.0.0"
+
 
 @app.route('/')
 @app.route('/index')
@@ -165,14 +169,17 @@ def get_images():
                 img_obj = {"image": file, "title": "", "thumbnail": "", "url": ""}
                 checksum.update(file.encode("utf-8"))
                 images.append(img_obj)
-                
+    
     slide_interval = read_config()["DEFAULT"]["slide_interval"]
+    checksum.update(slide_interval.encode("utf-8"))
     response = {"checksum": checksum.hexdigest(), "slide_interval": slide_interval , "images": images}
     return jsonify(response)
+
 
 @app.route('/slideshow')
 def slideshow():
     return render_template('slideshow.html')
+
 
 @app.route('/save_img_dir', methods=['POST'])
 def save_img_dir():
@@ -186,6 +193,7 @@ def save_img_dir():
 @app.route('/wifi')
 def wifi():
     return render_template('wifi.html')
+
 
 @app.route('/get_ip')
 def get_ip():

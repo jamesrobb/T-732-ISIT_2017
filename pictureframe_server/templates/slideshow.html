@@ -18,6 +18,7 @@
 		<script type="text/javascript">
 			
 			live_slides = [];
+			slide_interval = 5;
 			first_load = true;
 			checksum = "";
 			
@@ -26,8 +27,8 @@
 				$.supersized({
 				
 					// Functionality
-					slide_interval          :   3000,		// Length between transitions
-					transition              :   1, 			// 0-None, 1-Fade, 2-Slide Top, 3-Slide Right, 4-Slide Bottom, 5-Slide Left, 6-Carousel Right, 7-Carousel Left
+					slide_interval          :   Math.floor(slide_interval * 1000),		// Length between transitions
+					transition              :   0, 			// 0-None, 1-Fade, 2-Slide Top, 3-Slide Right, 4-Slide Bottom, 5-Slide Left, 6-Carousel Right, 7-Carousel Left
 					transition_speed		:	700,		// Speed of transition
 															   
 					// Components							
@@ -50,7 +51,7 @@
 
 				//http://apis.is/cyclecounter
 				$.ajax({
-					url: "http://localhost:5000/get_images",
+					url: "/get_images",
 					type: "GET",
 					dataType: "json",
 					success: function(response){
@@ -59,6 +60,7 @@
 
 						if(first_load) {
 
+							slide_interval = parseInt(response["slide_interval"]);
 							live_slides = shuffle(response["images"]);
 							checksum = response["checksum"];
 							first_load = false;

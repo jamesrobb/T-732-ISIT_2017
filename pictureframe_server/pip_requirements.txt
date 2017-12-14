@@ -1,4 +1,4 @@
 Flask
 flask_cors
-flup-py3
+flipflop
 netifaces
