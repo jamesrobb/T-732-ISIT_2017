@@ -68,3 +68,15 @@ We attempted to use the dc-dc converter so that we would be able to use one powe
 We hooked up the TSL2591 sensor and tested it with a python module (https://github.com/maxlklaxl/python-tsl2591) to make sure everything worked. We tested if some clear acrylic could act as a conduit to pass enough light through the frame to be able to get a good reading but the that did not work as we wanted.
 
 The frame was routed to be able to fit the screen inside with the glass. The screen had some small metal lips that also needed to be cut off, but in the end it fit snugly.
+
+## 13/12/2017
+
+We addressed the power conversion issue with a USB car charger. We used it to down down 12V from the power suplly to 5V for the pi.
+
+We routed out a section of the frame (on the top) to house the light sensor. The idea was to bring the light sensitive portion of the breakout board close enough to the exterior of the frame so that there was a reasonably viewing angle from the sensors perspective. Unfortunately when tested the viewing angle is still not sufficient and so we will remedy this tomorrow.
+
+Despite the viewing angle beinr poor, we wrote a script to adjust the brightness based on the lux value returned from the sensor, and it works quite well. The code will be added to the repo after some more testing, calibrating, and "polishing".
+
+We mounted the glass and screen into the frame, and secured them in place with L-brackets. We obtained a small section of plexi glass from the engineering lab. It was cut to a size needed to mount the pi, the screen controller, and the logic level shifter on it. We drilled holes for the pi and the screen controller so that they could be screwed down to the plexi glass, and the logical level controlelr was affixed to the plexi glass with a epoxy resin (as the logic level converter had no mounting holes). The power supply and the plexi glass with the components were then mounted on the inside of the frame with L-brackets.
+
+With all the components now mounted in the frame, we wired everything up (schematics will follow). Everything powered up as expected.
