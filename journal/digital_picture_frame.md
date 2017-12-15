@@ -92,3 +92,9 @@ lighttpd was configured using fastcgi to server our flask application. The `ligh
 The slideshow webpage was tested in chromium kiosk mode with the flask application running on the pi. Unfortunately the performance was very poor for two reasons. Chromium is very heavy software and the pi had trouble smoothly rendering all the images. Large images (greater than 5MB in size) cause the browser to lock up and occasionally crash. The second reason is that the slideshow software itself wanted to preload all images that it was to display. Given that the pi only has 1GB of memory, this is a bad idea as there could easily be more than 1GB of images in the slideshow. As a result we have abandoned the web based slideshow. We will begin developing our own slideshow software using tkinter and python tomorrow.
 
 The flask application was updated to allow changing the display interval for the slideshow, and the information was consolidated onto the landing page. A user can now see their connection information, and the slideshow settings on the landing page. The wifi tutorial page was created with instructions on how to connect the pi to a wireless network using keyboard and mouse.
+
+#15/12/2017
+
+We implemented a slideshow application using python and Tkinter, and the python package Pillow. Some of the Pillow features used require the `python3-pil.imagetk` package to be installed. This can be done with `apt-get`. We replicated the functionality of the browser based slideshow. The code is in the `/pictureframe_server/pictureframe_client.py` file. The new slideshow application also has an information slide it shows when it starts that indicates how to configure the wifi connection.
+
+We tweaked the tutorial we followed earlier for putting Chrome in kiosk mode to launch `pictureframe_client.py` instead of the browser.
