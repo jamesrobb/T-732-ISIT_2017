@@ -51,6 +51,7 @@
     <script src="/static/js/jquery-3.2.1.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/notify.min.js"></script>
 
     <!-- Agency core JS from template -->
     <script src="/static/js/agency.min.js"></script>
@@ -58,32 +59,38 @@
     <!-- Extra scripts manually added -->
     <script>
         $(function() {
-            $('#save_directory').click(function() {
+            $('#save_directory').click(function(e) {
+                e.preventDefault();
                 $.ajax({
                     url: '/save_img_dir',
                     data: $('form').serialize(),
                     type: 'POST',
                     success: function(response) {
-                        console.log(response);
+                        directory = response["directory"];
+                        $.notify( "Directory changed to: "+ directory, {position: "top right", className: "success"});
+                        $('#curr_directory').html('Current directory: ' + directory);
                     },
                     error: function(error) {
-                        console.log(error);
+                        $.notify( "Error while changing directory", {position: "top right", className: "error"});
                     }
                 });
             });
         });
 
         $(function() {
-            $('#save_interval').click(function() {
+            $('#save_interval').click(function(e) {
+                e.preventDefault();
                 $.ajax({
                     url: '/slide_interval',
                     data: $('form').serialize(),
                     type: 'POST',
                     success: function(response) {
-                        console.log(response);
+                        let interval = response["slide_interval"];
+                        $.notify( "Interval changed to: "+ interval+" seconds", {position: "top right", className: "success"});
+                        $('#curr_slide_interval').html('Current image interval: ' + interval);
                     },
                     error: function(error) {
-                        console.log(error);
+                        $.notify( "Error while changing interval", {position: "top right", className: "error"})
                     }
                 });
             });

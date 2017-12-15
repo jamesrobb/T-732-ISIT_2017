@@ -208,3 +208,10 @@ def slide_interval():
         return jsonify({'status': 'OK','slide_interval': interval})
     else:
         return jsonify({'status': 400, 'message': "Slide interval was not changed."})
+
+
+@app.route('/boot')
+def boot():
+    ssid = get_current_ssid()
+    ip = get_ip_address(ADAPTOR)
+    return render_template('boot.html', ssid=ssid, ip=ip)
