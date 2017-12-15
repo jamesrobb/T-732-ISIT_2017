@@ -166,7 +166,7 @@ def get_images():
 
             file = os.path.join(directory, base_file)
             if os.path.isfile(file):
-                img_obj = {"image": file, "title": "", "thumbnail": "", "url": ""}
+                img_obj = {"image": file}
                 checksum.update(file.encode("utf-8"))
                 images.append(img_obj)
     
