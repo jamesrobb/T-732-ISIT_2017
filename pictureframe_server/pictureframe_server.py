@@ -117,21 +117,28 @@ def get_ip_address(adapter):
 @app.route('/index')
 def index():
     params = {}
-    # Get current image dir to auto select in selection box
-    current_image_dir = read_config()["DEFAULT"]["current_image_dir"]
-    current_image_dir = "All" if current_image_dir == "" else current_image_dir
-    params["current_image_dir"] = current_image_dir
     # Get all directories that are available under IMG_BASE_DIR
     directories = get_base_directories()
     directories.insert(0, "All")
     params["directories"] = directories
+
+    # Get current image dir to auto select in selection box
+    current_image_dir = read_config()["DEFAULT"]["current_image_dir"]
+    current_image_dir = "All" if current_image_dir == "" else current_image_dir
+    if current_image_dir not in directories:
+        save_dir("All")
+        current_image_dir = "All"
+    params["current_image_dir"] = current_image_dir
+
     # Get network info
     ssid = get_current_ssid()
     params["ssid"] = ssid
     ip = get_ip_address(ADAPTOR)
     params["ip"] = ip
+
     # Get slide interval
     params["slide_interval"] = read_config()["DEFAULT"]["slide_interval"]
+
     return render_template('index.html', params=params)
 
 
@@ -173,11 +180,6 @@ def get_images():
     return jsonify(response)
 
 
-@app.route('/slideshow')
-def slideshow():
-    return render_template('slideshow.html')
-
-
 @app.route('/save_img_dir', methods=['POST'])
 def save_img_dir():
     dir =  request.form['directory']    
@@ -205,10 +207,3 @@ def slide_interval():
         return jsonify({'status': 'OK','slide_interval': interval})
     else:
         return jsonify({'status': 400, 'message': "Slide interval was not changed."})
-
-
-@app.route('/boot')
-def boot():
-    ssid = get_current_ssid()
-    ip = get_ip_address(ADAPTOR)
-    return render_template('boot.html', ssid=ssid, ip=ip)
