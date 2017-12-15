@@ -49,7 +49,7 @@ class Slideshow():
 
         # intialize Tk and Tk window
         self.root = tk.Tk()
-        #self.root.attributes("-fullscreen", True)
+        self.root.attributes("-fullscreen", True)
         self.root.title("Slideshow")
         self.root.geometry("%dx%d+%d+%d" % (self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT, 0, 0))
 
