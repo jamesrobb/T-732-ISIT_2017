@@ -8,11 +8,13 @@ import requests
 import random
 import logging
 
+import pictureframe_vars
+
 class Slideshow():
 
     DISPLAY_WIDTH = 1920
     DISPLAY_HEIGHT = 1080
-    SERVER_URL = 'http://localhost:5000/'
+    SERVER_URL = pictureframe_vars.SERVER_URL
     GET_IMAGES_FREQUENCY = 5 # how many images to display before checking for new images
 
     images = []
