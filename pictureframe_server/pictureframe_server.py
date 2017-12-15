@@ -210,3 +210,9 @@ def slide_interval():
         return jsonify({'status': 'OK','slide_interval': interval})
     else:
         return jsonify({'status': 400, 'message': "Slide interval was not changed."})
+
+
+@app.route('/upload')
+def howto_upload():
+    ip = get_ip_address(ADAPTOR)
+    return render_template('upload.html', ip=ip)
