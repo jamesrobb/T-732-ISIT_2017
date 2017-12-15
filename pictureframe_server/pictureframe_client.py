@@ -30,6 +30,7 @@ class Slideshow():
     image_panel = None
     image_ref = None # we must store a reference to any PhotoImage we make, otherwise it will be garbage collected, even when being displayed (says so in Tk docs)
 
+
     def __init__(self, start=False):
 
         # intialize Tk and Tk window
@@ -53,14 +54,17 @@ class Slideshow():
 
         self.root.mainloop()
 
+
     def next_image(self):
 
         self.render_image()
         self.increment_images_index()
         self.root.after(self.display_interval, self.next_image)
 
+
     def get_black(self):
         return self.black.copy()
+
 
     def get_image(self, index):
 
@@ -70,25 +74,48 @@ class Slideshow():
             print("There was an error loading %s" % self.images[index])
             return None
 
-        # come back here to do image resizing so the frame is filled up with landscape photos
-        # portrait or box photos will have black bars on the sides
-        # if width > height:
-        #     # landscape image
-        # else:
-        #     # box or portrait
+        # Get width & height of the original image
+        width,height = image.size
 
-        image = image.resize((self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))
+        # Where to start drawing the new image on black.
+        start_width, start_height = (0,0)
+
+        # If we have a portrait photo, we scale height to 100% and width with percentage of height to keep scale.
+        if (width/height) <= 1.3:
+            """The proportional width is calculated by determining what percentage 
+                DISPLAY_HEIGHT pixels is of the original height and then multiplying 
+                the original width by that percentage."""
+            hpercent = (self.DISPLAY_HEIGHT / float(height))
+            wsize = int(float(width) * float(hpercent))
+            image = image.resize((wsize, self.DISPLAY_HEIGHT), Image.ANTIALIAS)
+            # Calculate how much of the screen is not filled up by the image so we can center the image on the display.
+            start_width = int((self.DISPLAY_WIDTH - wsize) / 2)
+
+        else:
+            """The proportional height is calculated by determining what percentage 
+                DISPLAY_WIDTH pixels is of the original width and then multiplying 
+                the original height by that percentage."""
+            wpercent = (self.DISPLAY_WIDTH / float(width))
+            hsize = int((float(height) * float(wpercent)))
+            image = image.resize((self.DISPLAY_WIDTH, hsize), Image.ANTIALIAS)
+            # Calculate how much of the image surpasses the display height and make it even on both sides.
+            start_height = int((self.DISPLAY_HEIGHT - hsize) / 2)
+            
+
         black = self.get_black()
-        black.paste(image, (0, 0))
+        # Adding the image on a black background ath the correct position
+        black.paste(image, (start_width, start_height))
 
-        return image
+        return black
         
+
     def render_image(self):
 
         self.image_ref = ImageTk.PhotoImage(self.get_image(self.image_index))
         self.image_panel.configure(image=self.image_ref)
 
         return
+
 
     def increment_images_index(self):
 
@@ -98,6 +125,7 @@ class Slideshow():
             self.image_index = 0
 
         return
+
 
 class Example():
     def __init__(self):
