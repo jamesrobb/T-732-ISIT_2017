@@ -24,7 +24,6 @@ class Slideshow():
     images = []
     image_index = 0
     black = None # black image the size of the display
-    display_interval = 10000
 
     # tk components
     root = None
@@ -33,7 +32,7 @@ class Slideshow():
 
     # picture frame 
     checksum = None
-    slide_interval = None
+    slide_interval = 10000
     first_load = True
     images_seen_since_query = 0
 
@@ -85,7 +84,8 @@ class Slideshow():
                 self.images_seen_since_query = 0
                 self.get_images()
 
-        self.root.after(self.display_interval, self.next_image)
+        interval = 10000 if initial_image else self.slide_interval
+        self.root.after(interval, self.next_image)
 
 
     def get_black(self):
@@ -192,7 +192,7 @@ class Slideshow():
         random.shuffle(self.images)
         self.image_index = 0
         self.checksum = new_checksum
-        self.slide_interval = r.json()["slide_interval"]
+        self.slide_interval = int(r.json()["slide_interval"])*1000
 
     def get_current_ssid(self):
         process = subprocess.Popen(["/sbin/iwgetid | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g'"], stdout=subprocess.PIPE, shell=True)
