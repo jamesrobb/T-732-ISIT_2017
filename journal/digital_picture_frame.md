@@ -77,6 +77,18 @@ We routed out a section of the frame (on the top) to house the light sensor. The
 
 Despite the viewing angle beinr poor, we wrote a script to adjust the brightness based on the lux value returned from the sensor, and it works quite well. The code will be added to the repo after some more testing, calibrating, and "polishing".
 
-We mounted the glass and screen into the frame, and secured them in place with L-brackets. We obtained a small section of plexi glass from the engineering lab. It was cut to a size needed to mount the pi, the screen controller, and the logic level shifter on it. We drilled holes for the pi and the screen controller so that they could be screwed down to the plexi glass, and the logical level controlelr was affixed to the plexi glass with a epoxy resin (as the logic level converter had no mounting holes). The power supply and the plexi glass with the components were then mounted on the inside of the frame with L-brackets.
+We mounted the glass and screen into the frame, and secured them in place with L-brackets. We obtained a small section of plexi glass from the engineering lab. It was cut to a size needed to mount the pi, the screen controller, and the logic level shifter on it. We drilled holes for the pi and the screen controller so that they could be screwed down to the plexi glass, and the logical level controller was affixed to the plexi glass with a epoxy resin (as the logic level converter had no mounting holes). The power supply and the plexi glass with the components were then mounted on the inside of the frame with L-brackets.
 
 With all the components now mounted in the frame, we wired everything up (schematics will follow). Everything powered up as expected.
+
+#14/12/2017
+
+A larger hole was drilled into the frame to allow more light to hit the light sensor. A circular piece of acrylic was expoxied into the whole so that dust did not enter the frame. The light sensor was then expoxied into the frame just undernear the acrylic. The accompanying script to adjust the brightness was modified to calculate the brightness using a increasing exponential decay formula. The updates to this can be seen in the git log.
+
+In order to allow users to upload photos, an proftpd (an ftp server) was installed that allows anonymous uploads to the directory where slideshow images are stored. Pureftpd and vsftpd were both tried, but configuring them for anonymous upload was cumbersome as the former was poorly documented and the latter had a bug.
+
+lighttpd was configured using fastcgi to server our flask application. The `lighttpd.conf` can be found int the `pictureframe_server` folder in the git repo.
+
+The slideshow webpage was tested in chromium kiosk mode with the flask application running on the pi. Unfortunately the performance was very poor for two reasons. Chromium is very heavy software and the pi had trouble smoothly rendering all the images. Large images (greater than 5MB in size) cause the browser to lock up and occasionally crash. The second reason is that the slideshow software itself wanted to preload all images that it was to display. Given that the pi only has 1GB of memory, this is a bad idea as there could easily be more than 1GB of images in the slideshow. As a result we have abandoned the web based slideshow. We will begin developing our own slideshow software using tkinter and python tomorrow.
+
+The flask application was updated to allow changing the display interval for the slideshow, and the information was consolidated onto the landing page. A user can now see their connection information, and the slideshow settings on the landing page.
