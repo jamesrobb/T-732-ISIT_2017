@@ -1,13 +1,19 @@
+#!/usr/bin/python3
+
+import sys
 import tkinter as tk
 from PIL import Image, ImageTk
 import time
 import requests
+import random
+import logging
 
 class Slideshow():
 
     DISPLAY_WIDTH = 1920
     DISPLAY_HEIGHT = 1080
     SERVER_URL = 'http://localhost:5000/'
+    GET_IMAGES_FREQUENCY = 5 # how many images to display before checking for new images
 
     images = []
     image_index = 0
@@ -23,14 +29,22 @@ class Slideshow():
     checksum = None
     slide_interval = None
     first_load = True
+    images_seen_since_query = 0
+
+    # debug information
+    logger = None
     
 
     def __init__(self, start=False):
 
+
+        self.logger = logging.getLogger("slideshow-logger")
+        self.logger.disabled = False
+
         # intialize Tk and Tk window
         self.root = tk.Tk()
         self.root.attributes("-fullscreen", True)
-        self.root.title("test macaroni")
+        self.root.title("Slideshow")
         self.root.geometry("%dx%d+%d+%d" % (self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT, 0, 0))
 
         # create black image base (used as a background for images that don't fill screen entirely)
@@ -46,7 +60,7 @@ class Slideshow():
         self.first_load = False
 
         if start:
-            print("starting")
+            self.logger.debug("Starting slideshow.")
             self.next_image()
 
         self.root.mainloop()
@@ -56,7 +70,12 @@ class Slideshow():
 
         self.render_image()
         self.increment_images_index()
-        self.get_images()
+
+        self.images_seen_since_query += 1
+        if self.images_seen_since_query >= self.GET_IMAGES_FREQUENCY:
+            self.images_seen_since_query = 0
+            self.get_images()
+
         self.root.after(self.display_interval, self.next_image)
 
 
@@ -66,10 +85,14 @@ class Slideshow():
 
     def get_image(self, index):
 
+        if(len(self.images) == 0):
+            self.logger.debug("The images array contains no images. A black screen should be displayed")
+            return None
+
         try:
             image = Image.open(self.images[index]).convert('RGBA')
         except:
-            print("There was an error loading %s" % self.images[index])
+            self.logger.debug("There was an error loading %s." % self.images[index])
             return None
 
         # Get width & height of the original image
@@ -109,7 +132,16 @@ class Slideshow():
 
     def render_image(self):
 
-        self.image_ref = ImageTk.PhotoImage(self.get_image(self.image_index))
+        image = self.get_image(self.image_index)
+        if image is None:
+            self.logger.debug("Can't render bogus image. Removing image from images array.")
+
+            if len(self.images) > 0:
+                self.images.pop(self.image_index)
+
+            image = self.get_black()
+
+        self.image_ref = ImageTk.PhotoImage(image)
         self.image_panel.configure(image=self.image_ref)
 
         return
@@ -127,18 +159,21 @@ class Slideshow():
     def get_images(self):
         r = requests.get(self.SERVER_URL+"get_images")
         new_checksum = r.json()["checksum"]
-        if self.checksum == new_checksum:
+
+        if self.checksum == new_checksum and (not self.first_load):
             return
 
+        self.logger.debug("Images refreshed.")
         self.images = [img["image"] for img in r.json()["images"]]
+        random.shuffle(self.images)
+        self.image_index = 0
         self.checksum = new_checksum
         self.slide_interval = r.json()["slide_interval"]
 
 
 def main():
-    #app = Example()
-    app2 = Slideshow(start=True)
-    #app2.get_image(0)
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    app = Slideshow(start=True)
 
 if __name__ == '__main__':
     main()
