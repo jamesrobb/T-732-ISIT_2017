@@ -1,26 +1,15 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import time
+import requests
 
 class Slideshow():
 
     DISPLAY_WIDTH = 1920
     DISPLAY_HEIGHT = 1080
-    PATH_TO_IMG = './static/slideshow_images/'
+    SERVER_URL = 'http://localhost:5000/'
 
-
-    images = [
-        PATH_TO_IMG+"the_map_of_mathematics.jpg",
-        PATH_TO_IMG+"WP_000391.jpg",
-        PATH_TO_IMG+"WP_000277.jpg",
-        PATH_TO_IMG+"DSC_0228.JPG",
-        PATH_TO_IMG+"DSC_0032.JPG",
-        PATH_TO_IMG+"math_stud/math_nerd_meme1.png",
-        PATH_TO_IMG+"math_stud/math_nerd_meme2.png",
-        PATH_TO_IMG+"math_stud/math_nerd_meme3.png",
-        PATH_TO_IMG+"memes/25360371_1524785207616645_2128903139_n.png",
-        PATH_TO_IMG+"memes/24203471_922915184523301_583399852_n.jpg"
-    ]
+    images = []
     image_index = 0
     black = None # black image the size of the display
     display_interval = 3000
@@ -30,6 +19,11 @@ class Slideshow():
     image_panel = None
     image_ref = None # we must store a reference to any PhotoImage we make, otherwise it will be garbage collected, even when being displayed (says so in Tk docs)
 
+    # picture frame 
+    checksum = None
+    slide_interval = None
+    first_load = True
+    
 
     def __init__(self, start=False):
 
@@ -48,6 +42,9 @@ class Slideshow():
         self.image_panel = tk.Label(self.root, image=self.image_ref)
         self.image_panel.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
 
+        self.get_images()
+        self.first_load = False
+
         if start:
             print("starting")
             self.next_image()
@@ -59,6 +56,7 @@ class Slideshow():
 
         self.render_image()
         self.increment_images_index()
+        self.get_images()
         self.root.after(self.display_interval, self.next_image)
 
 
@@ -126,56 +124,16 @@ class Slideshow():
 
         return
 
+    def get_images(self):
+        r = requests.get(self.SERVER_URL+"get_images")
+        new_checksum = r.json()["checksum"]
+        if self.checksum == new_checksum:
+            return
 
-class Example():
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title('My Pictures')
+        self.images = [img["image"] for img in r.json()["images"]]
+        self.checksum = new_checksum
+        self.slide_interval = r.json()["slide_interval"]
 
-        # pick an image file you have .bmp  .jpg  .gif.  .png
-        # load the file and covert it to a Tkinter image object
-        imageFile = "babyAce.jpg"
-        self.black = Image.new('RGBA', (800, 600))
-        self.black.paste((0,0,0), (0, 0, 800, 600))
-        #self.black = ImageTk.PhotoImage(self.black)
-        # self.image1 = ImageTk.PhotoImage(Image.open('./static/slideshow_images/DSC_0032.JPG').resize((800, 600)))
-        # self.image2 = ImageTk.PhotoImage(Image.open('./static/slideshow_images/00003.jpg').resize((800, 600)))
-        self.image1 = Image.open('./static/slideshow_images/DSC_0032.JPG').convert('RGBA').resize((800, 600))
-        #self.image2 = Image.open('./static/slideshow_images/00003.jpg').resize((800, 600))
-        self.comp = ImageTk.PhotoImage(Image.blend(self.image1, self.black, 0.5))
-
-        # get the image size
-        #w = self.image1.width()
-        #h = self.image1.height()
-        w = 800
-        h = 600
-
-        # position coordinates of root 'upper left corner'
-        x = 0
-        y = 0
-
-        # make the root window the size of the image
-        self.root.geometry("%dx%d+%d+%d" % (w, h, x, y))
-
-        # root has no image argument, so use a label as a panel
-        self.panel1 = tk.Label(self.root, image=self.comp)
-        #self.display = self.image1
-        self.panel1.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
-        print("Display image1")
-        self.root.after(3000, self.update_image)
-        self.root.mainloop()
-
-    def update_image(self):
-        print("update image mofucka")
-        # if self.display == self.image1:
-        #     self.panel1.configure(image=self.image2)
-        #     print("Display image2")
-        #     self.display = self.image2
-        # else:
-        #     self.panel1.configure(image=self.image1)
-        #     print("Display image1")
-        #     self.display = self.image1
-        # self.root.after(30000, self.update_image)       # Set to call again in 30 seconds
 
 def main():
     #app = Example()
