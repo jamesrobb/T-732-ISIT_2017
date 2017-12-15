@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Header -->
+<section id="contact">
+	<div class="container">
+		
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h3 class="section-heading text-uppercase">Uploading images to your picture frame.</h3>
+			</div>
+		</div>		
+		<div class="row col-lg-12 text-center">
+			<p class="text-guide">
+                The easiest way to upload pictures to your picture frame is by using an FTP program like FileZilla.
+                There is no authentication needed so the only thing you will need is the ip address of the picture frame ( {% if ip == "0.0.0.0" %} no ip address found {% else %} {{ ip }} {% endif %}).
+                You can download FileZilla on their <a href="https://filezilla-project.org/download.php?type=client">website.</a>
+            </p>
+            
+			<p class="text-guide">
+                The quickest way to connect is by using the quickconnect bar to establish a connection. The quckconnect is located at the upper left corner of the window.
+			</p>
+            <img class="img-fluid rounded mx-auto d-block" src="/static/img/quickconnect-bar.png" alt="Quickconnect bar">
+			<p class="text-guide">
+                After putting in the picture frames IP address, press the Quickconnect button and you should get a confirmation looking something like this
+            </p>
+            <img class="img-fluid rounded mx-auto d-block" src="/static/img/connect-confirmation.png" alt="connection-conformation">
+            
+            <p class="text-guide">
+                    When you have successfully connected you have four panels. The left two panels are showing your computer, while the right two are showing you the picture frames files and folders.
+                    You can navigate to you image folder on the left side, right click it and choose "Upload". This will upload your folder with all the pictures inside to the picture frame.                    
+            </p>
+            <img class="img-fluid rounded mx-auto d-block" src="/static/img/folder-viewer.png" alt="Folder viewer">
+            <p class="text-guide">
+                If you would rather manually create your folder you can do that as well. To create a folder on the frame you can right click the root ( / ) directory and choose 
+                "Create Directory" which will create a new folder. Then you can shoose the images you want to upload and either drag them from left panel to right, or if you prefer, 
+                highlight the folder on the picture frame you want your files to go in, then right clicking your picture on the left and hit upload.
+            </p>
+
+            <div class="col-lg-12 text-center">
+				<h3 class="section-heading text-uppercase">Showing your pictures</h3>
+			</div>
+        
+            <p class="text-guide">
+                    Now to be able to display your newly uploaded pictures on the picture frame, head over to the <a href="/">settings</a> page and choose the correct directory and hit save.
+            </p>
+			<img class="img-fluid rounded mx-auto d-block" src="/static/img/folder-selection.png" alt="folder selection">
+		</div>
+		
+	</div>
+</section>
+{% endblock %}
