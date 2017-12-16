@@ -4,5 +4,6 @@ APP_FILE_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
 IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
 ADAPTOR = "wlan0"
+ALPHA_TWEEN_SLEEP_MS = 50
 
 SERVER_URL = "http://localhost:5000/"
