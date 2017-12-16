@@ -98,3 +98,8 @@ The flask application was updated to allow changing the display interval for the
 We implemented a slideshow application using python and Tkinter, and the python package Pillow. Some of the Pillow features used require the `python3-pil.imagetk` package to be installed. This can be done with `apt-get`. We replicated the functionality of the browser based slideshow. The code is in the `/pictureframe_server/pictureframe_client.py` file. The new slideshow application also has an information slide it shows when it starts that indicates how to configure the wifi connection.
 
 We tweaked the tutorial we followed earlier for putting Chrome in kiosk mode to launch `pictureframe_client.py` instead of the browser.
+
+
+#16/12/2017
+
+We modified the slideshow applicating to support fading from one image to another. While this worked well on a modern laptop, the raspberry pi could not do the alpha blending efficiently enough for the effect to be worth while. While running on the pi, the fading effect was very "laggy". We speculate if we had used something that supproted hardware accelration, the effect would have worked as aniticpated.
