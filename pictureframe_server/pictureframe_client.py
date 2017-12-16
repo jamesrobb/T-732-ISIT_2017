@@ -162,9 +162,10 @@ class Slideshow():
 
             if image is not None:
 
-                prev_image = None if self.last_image_not_tweenable else self.get_image(self.get_prev_image_index())
-                if prev_image is not None:
-                    self.alpha_tween_images(prev_image, image)
+                # # raspberry pi is unfortunatly not powerful enough to render the alpha tween (with tk) smoothly enough to be worth it
+                # prev_image = None if self.last_image_not_tweenable else self.get_image(self.get_prev_image_index())
+                # if prev_image is not None:
+                #     self.alpha_tween_images(prev_image, image)
 
                 self.last_image_not_tweenable = False
 
