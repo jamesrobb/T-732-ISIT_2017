@@ -21,7 +21,7 @@ class Slideshow():
     ADAPATOR = pictureframe_vars.ADAPTOR
     GET_IMAGES_FREQUENCY = 5 # how many images to display before checking for new images
     INITIAL_DISPLAY_INTERVAL = 5000 # how many milliseconds to display initial instructions slide
-    ALPHA_TWEEN_INCREMENT = 0.1 # alpha will tween from 0 to 1, this is the increment
+    ALPHA_TWEEN_INCREMENT = self.ALPHA_TWEEN_INCREMENT # alpha will tween from 0 to 1, this is the increment
     ALPHA_TWEEN_SLEEP_MS = pictureframe_vars.ALPHA_TWEEN_SLEEP_MS # how many milliseconds should elapse before increasing alpha value in
 
     images = []

@@ -5,5 +5,6 @@ IMG_BASE_DIR = "static/slideshow_images"
 CONFIG_FILE = "config.cfg"
 ADAPTOR = "wlan0"
 ALPHA_TWEEN_SLEEP_MS = 50
+ALPHA_TWEEN_INCREMENT = 0.25
 
 SERVER_URL = "http://localhost:5000/"
