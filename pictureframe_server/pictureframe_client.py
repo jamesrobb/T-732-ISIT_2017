@@ -20,6 +20,9 @@ class Slideshow():
     SERVER_URL = pictureframe_vars.SERVER_URL
     ADAPATOR = pictureframe_vars.ADAPTOR
     GET_IMAGES_FREQUENCY = 5 # how many images to display before checking for new images
+    INITIAL_DISPLAY_INTERVAL = 5000 # how many milliseconds to display initial instructions slide
+    ALPHA_TWEEN_INCREMENT = 0.1 # alpha will tween from 0 to 1, this is the increment
+    ALPHA_TWEEN_SLEEP_MS = 50 # how many milliseconds should elapse before increasing alpha value in
 
     images = []
     image_index = 0
@@ -29,16 +32,17 @@ class Slideshow():
     root = None
     image_panel = None
     image_ref = None # we must store a reference to any PhotoImage we make, otherwise it will be garbage collected, even when being displayed (says so in Tk docs)
+    next_image_ref = None # same as above but used for storing the image we fade into
 
     # picture frame 
     checksum = None
     slide_interval = 10000
     first_load = True
     images_seen_since_query = 0
+    last_image_not_tweenable = True # used for fading from initial instruction image to first actual image 
 
     # debug information
     logger = None
-    
 
     def __init__(self, start=False):
 
@@ -61,32 +65,14 @@ class Slideshow():
         self.image_panel = tk.Label(self.root, image=self.image_ref)
         self.image_panel.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
 
-        self.get_images()
+        self.get_images_from_server()
         self.first_load = False
 
         if start:
             self.logger.debug("Starting slideshow.")
-            self.next_image(initial_image=True)
+            self.display_next_image(initial_image=True)
 
         self.root.mainloop()
-
-
-    def next_image(self, initial_image=False):
-
-        self.render_image(initial_image)
-        self.increment_images_index()
-
-        if initial_image:
-            self.image_index = 0
-        else:
-            self.images_seen_since_query += 1
-            if self.images_seen_since_query >= self.GET_IMAGES_FREQUENCY:
-                self.images_seen_since_query = 0
-                self.get_images()
-
-        interval = 10000 if initial_image else self.slide_interval
-        self.root.after(interval, self.next_image)
-
 
     def get_black(self):
         return self.black.copy()
@@ -103,6 +89,22 @@ class Slideshow():
         draw.text((10, 120), "YOU CAN THEN CONFIGURE THE WIFI BY CLICKING ON THE WIFI ON THE TOP RIGHT CORNER OF THE SCREEN.", (255, 255, 255), font=font)
 
         return bg
+
+    def display_next_image(self, initial_image=False):
+
+        self.render_image(initial_image)
+        self.image_index = self.get_next_image_index()
+
+        if initial_image:
+            self.image_index = 0
+        else:
+            self.images_seen_since_query += 1
+            if self.images_seen_since_query >= self.GET_IMAGES_FREQUENCY:
+                self.images_seen_since_query = 0
+                self.get_images_from_server()
+
+        interval = self.INITIAL_DISPLAY_INTERVAL if initial_image else self.slide_interval
+        self.root.after(interval, self.display_next_image)
 
     def get_image(self, index):
 
@@ -157,30 +159,68 @@ class Slideshow():
             image = self.get_initial_image()
         else:
             image = self.get_image(self.image_index)
-            if image is None:
+
+            if image is not None:
+
+                prev_image = None if self.last_image_not_tweenable else self.get_image(self.get_prev_image_index())
+                if prev_image is not None:
+                    self.alpha_tween_images(prev_image, image)
+
+                self.last_image_not_tweenable = False
+
+            else:
                 self.logger.debug("Can't render bogus image. Removing image from images array.")
 
                 if len(self.images) > 0:
                     self.images.pop(self.image_index)
 
                 image = self.get_black()
+                self.last_image_not_tweenable = True
 
         self.image_ref = ImageTk.PhotoImage(image)
         self.image_panel.configure(image=self.image_ref)
+        self.image_panel.update()
 
         return
 
+    def alpha_tween_images(self, image1, image2):
 
-    def increment_images_index(self):
+        current_alpha = 0.0
 
-        self.image_index += 1
-
-        if self.image_index > len(self.images) - 1:
-            self.image_index = 0
+        while current_alpha < 1.0:
+            #self.logger.debug("blending with alpha %f" % current_alpha)
+            blended_image = Image.blend(image1, image2, current_alpha)
+            self.image_ref = ImageTk.PhotoImage(blended_image)
+            self.image_panel.configure(image=self.image_ref)
+            self.image_panel.update()
+            current_alpha += self.ALPHA_TWEEN_INCREMENT
+            time.sleep(float(self.ALPHA_TWEEN_SLEEP_MS) / 1000.0)
 
         return
 
-    def get_images(self):
+    def get_next_image_index(self):
+
+        if len(self.images) == 0:
+            return 0
+
+        index = self.image_index + 1
+        if index > len(self.images) - 1:
+            index = 0
+
+        return index
+
+    def get_prev_image_index(self):
+
+        if len(self.images) == 0:
+            return 0
+
+        index = self.image_index - 1
+        if index < 0:
+            index = len(self.images) -1
+
+        return index
+
+    def get_images_from_server(self):
         r = requests.get(self.SERVER_URL+"get_images")
         new_checksum = r.json()["checksum"]
 
