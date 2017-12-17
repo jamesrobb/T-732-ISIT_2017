@@ -103,3 +103,9 @@ We tweaked the tutorial we followed earlier for putting Chrome in kiosk mode to 
 #16/12/2017
 
 We modified the slideshow applicating to support fading from one image to another. While this worked well on a modern laptop, the raspberry pi could not do the alpha blending efficiently enough for the effect to be worth while. While running on the pi, the fading effect was very "laggy". We speculate if we had used something that supproted hardware accelration, the effect would have worked as aniticpated.
+
+#17/12/2017
+
+Today we added seasonal decorations to the pictureframe client.This is accomplised with super-imposing an images over the image being displayed. Currently we have one image which is being shown during the month of december but if the user is not in the holiday spirit, it can be disabled through the web interface. 
+
+The settings tab in the web interfaced was reconfigured to only having one save button for all the settings available. This was done for simplification.
