@@ -41,7 +41,6 @@ def save_dir(img_dir):
     if not os.path.isdir(os.path.join(IMG_BASE_DIR, img_dir)) and img_dir != "All":
         return False
 
-    config = configparser.ConfigParser()
     config = read_config()
     # If img_dir equals "All" we set the path to "" else the directory the user requested
     config["DEFAULT"]["current_image_dir"] = "" if img_dir == "All" else img_dir
@@ -60,7 +59,6 @@ def save_slide_interval(interval_time):
     except ValueError:
         return False
     
-    config = configparser.ConfigParser()
     config = read_config()
     config["DEFAULT"]["slide_interval"] = interval_time
 
@@ -74,7 +72,7 @@ def save_decoration_status(status):
     """Saving decoration status to config file.
         Status param should be boolean"""
     if status == 'True' or status == 'False':
-        config = configparser.ConfigParser()
+        
         config = read_config()
         config["DEFAULT"]["decorations"] = status
 
