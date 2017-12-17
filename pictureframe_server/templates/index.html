@@ -34,10 +34,10 @@
                 <div class="form-group">
                     <label for="decorations">Show decorations</label>
                     <select name="decorations" id="decorations" class="custom-select col-sm-12">
-                        <option value="True" {% if (params["current_image_dir"] == "yes") %} selected="selected" {% endif %}>
+                        <option value="True" {% if (params["decorations"] == "True") %} selected="selected" {% endif %}>
                             yes
                         </option>
-                        <option value="False" {% if (params["current_image_dir"] == "no") %} selected="selected" {% endif %}>
+                        <option value="False" {% if (params["decorations"] == "False") %} selected="selected" {% endif %}>
                             no
                         </option>
                     </select>
