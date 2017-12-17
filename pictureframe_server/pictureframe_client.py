@@ -2,9 +2,10 @@
 
 import os
 import sys
+import datetime
+import time
 import tkinter as tk
 from PIL import Image, ImageTk, ImageFont, ImageDraw
-import time
 import requests
 import random
 import subprocess
@@ -23,6 +24,10 @@ class Slideshow():
     INITIAL_DISPLAY_INTERVAL = pictureframe_vars.INITIAL_DISPLAY_INTERVAL # how many milliseconds to display initial instructions slide
     ALPHA_TWEEN_INCREMENT = pictureframe_vars.ALPHA_TWEEN_INCREMENT # alpha will tween from 0 to 1, this is the increment
     ALPHA_TWEEN_SLEEP_MS = pictureframe_vars.ALPHA_TWEEN_SLEEP_MS # how many milliseconds should elapse before increasing alpha value in
+    ENABLE_DECORATIONS = pictureframe_vars.ENABLE_DECORATIONS
+
+    # decoration image references
+    december_decoration = None
 
     images = []
     image_index = 0
@@ -58,7 +63,16 @@ class Slideshow():
 
         # create black image base (used as a background for images that don't fill screen entirely)
         self.black = Image.new('RGBA', (self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))
-        self.black.paste((0,0,0), (0, 0, self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))   
+        self.black.paste((0,0,0), (0, 0, self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))
+
+        file_dir = os.path.dirname(os.path.realpath(__file__))
+        if self.ENABLE_DECORATIONS:
+            try:
+                self.december_decoration = Image.open(os.path.join(file_dir, "december_decoration.png")).convert("RGBA")
+                self.december_decoration = self.december_decoration.resize((self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT), Image.ANTIALIAS)
+                self.logger.debug("loaded december decoration")
+            except:
+                self.logger.debug("Could not load december decoration")
         
         self.image_ref = ImageTk.PhotoImage(self.black.copy())
 
@@ -177,6 +191,16 @@ class Slideshow():
 
                 image = self.get_black()
                 self.last_image_not_tweenable = True
+
+        # decorations have not been implemented such that fading will work with them
+        if self.ENABLE_DECORATIONS and initial_image == False:
+
+            today = datetime.date.today()
+
+            if self.december_decoration is not None and today.month == 12:
+                self.logger.debug("applying december decoration")
+                image.paste(self.december_decoration, (0, 0), self.december_decoration)
+
 
         self.image_ref = ImageTk.PhotoImage(image)
         self.image_panel.configure(image=self.image_ref)
