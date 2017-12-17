@@ -1,5 +1,6 @@
 # application specific
 pictureframe_server/pictureframe_vars.py
+pictureframe_server/config.cfg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
