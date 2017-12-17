@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row">
 
-            <form class="text-guide" action="/save_settings" method="post" name="save_settings" role="form">
+            <form class="text-guide col-sm-4" action="/save_settings" method="post" name="save_settings" role="form">
                 <div class="form-group">
                     <label for="directory">Image directory</label>
                     <select name="directory" id="directory" class="custom-select col-sm-12">
@@ -52,8 +52,26 @@
                 </div>
                 
                 <button type="submit" class="btn btn-primary" id="save_settings" >Save settings</button>
-              </form>
+            </form>
+            
 
+            <div class="text-guide col-sm-8">
+                <h3> Network status:</h3>
+                <p class="">
+                    {% if params["ssid"] == "" %}
+                        No SSID found
+                    {% else %}
+                        SSID: {{params["ssid"]}}
+                    {% endif %}
+                </p>
+                <p> 
+                    {%  if params["ip"] == "0.0.0.0" %} 
+                    No ip address found. You likely are not connect to a network or experiencing a connection issue.
+                    {% else %}
+                    IP Address: {{ params["ip"]}}
+                    {% endif %}
+                </p>
+            </div>
         </div>
     </div>
 </section>
