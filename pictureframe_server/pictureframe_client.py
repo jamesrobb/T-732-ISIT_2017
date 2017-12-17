@@ -24,7 +24,7 @@ class Slideshow():
     INITIAL_DISPLAY_INTERVAL = pictureframe_vars.INITIAL_DISPLAY_INTERVAL # how many milliseconds to display initial instructions slide
     ALPHA_TWEEN_INCREMENT = pictureframe_vars.ALPHA_TWEEN_INCREMENT # alpha will tween from 0 to 1, this is the increment
     ALPHA_TWEEN_SLEEP_MS = pictureframe_vars.ALPHA_TWEEN_SLEEP_MS # how many milliseconds should elapse before increasing alpha value in
-    ENABLE_DECORATIONS = pictureframe_vars.ENABLE_DECORATIONS
+    ENABLE_DECORATIONS = False
 
     # decoration image references
     december_decoration = None
@@ -66,13 +66,14 @@ class Slideshow():
         self.black.paste((0,0,0), (0, 0, self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))
 
         file_dir = os.path.dirname(os.path.realpath(__file__))
-        if self.ENABLE_DECORATIONS:
-            try:
-                self.december_decoration = Image.open(os.path.join(file_dir, "december_decoration.png")).convert("RGBA")
-                self.december_decoration = self.december_decoration.resize((self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT), Image.ANTIALIAS)
-                self.logger.debug("loaded december decoration")
-            except:
-                self.logger.debug("Could not load december decoration")
+
+        try:
+            self.december_decoration = Image.open(os.path.join(file_dir, "december_decoration.png")).convert("RGBA")
+            self.december_decoration = self.december_decoration.resize((self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT), Image.ANTIALIAS)
+            self.logger.debug("loaded december decoration")
+        except:
+            self.december_decoration = None
+            self.logger.debug("Could not load december decoration")
         
         self.image_ref = ImageTk.PhotoImage(self.black.copy())
 
@@ -258,6 +259,10 @@ class Slideshow():
         self.image_index = 0
         self.checksum = new_checksum
         self.slide_interval = int(r.json()["slide_interval"])*1000
+        self.ENABLE_DECORATIONS = True if r.json()["decorations"] == "True" else False
+        print("Printing out decorations")
+        print(self.ENABLE_DECORATIONS)
+
 
     def get_current_ssid(self):
         process = subprocess.Popen(["/sbin/iwgetid | sed -e 's/\\(.*\\)ESSID:\"\\(.*\\)\"/\\2/g'"], stdout=subprocess.PIPE, shell=True)

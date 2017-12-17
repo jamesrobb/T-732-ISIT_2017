@@ -194,7 +194,9 @@ def get_images():
     
     slide_interval = read_config()["DEFAULT"]["slide_interval"]
     checksum.update(slide_interval.encode("utf-8"))
-    response = {"checksum": checksum.hexdigest(), "slide_interval": slide_interval , "images": images}
+    decorations = read_config()["DEFAULT"]["decorations"]
+    checksum.update(decorations.encode("utf-8"))
+    response = {"checksum": checksum.hexdigest(), "slide_interval": slide_interval , "images": images, "decorations": decorations}
     return jsonify(response)
 
 
