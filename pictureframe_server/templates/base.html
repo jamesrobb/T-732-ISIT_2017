@@ -57,6 +57,33 @@
     <!-- Extra scripts manually added -->
     <script>
         $(function() {
+            $('#save_settings').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/save_settings',
+                    data: $('form').serialize(),
+                    type: 'POST',
+                    success: function(response) {
+                        console.log(response);
+                        let directory = response["values"]["directory"];
+                        let interval = response["values"]["slide_interval"];
+                        let decorations = response["values"]["decorations"];
+                        $.notify( "Successfully changed settings", {position: "top right", className: "success"});
+                        $('#curr_directory').html('Current directory: ' + directory);
+                        if (interval != '') {
+                            $('#curr_slide_interval').html('Current image interval: ' + interval);
+                        }
+                        $('#curr_decorations').html('Decorations are ' + decorations);
+                    },
+                    error: function(error) {
+                        $.notify( error["msg"], {position: "top right", className: "error"});
+                    }
+                });
+            });
+        });
+
+
+        $(function() {
             $('#save_directory').click(function(e) {
                 e.preventDefault();
                 $.ajax({
@@ -74,7 +101,6 @@
                 });
             });
         });
-
         $(function() {
             $('#save_interval').click(function(e) {
                 e.preventDefault();

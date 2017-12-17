@@ -5,107 +5,56 @@
 <section id="contact">
     <div class="container">
         <div class="row">
-            <div class="col-sm-12 col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        Image directory
-                    </div>
-                    <div class="card-block">
-                        <p class="card-text"> Directory to show images from.</p>
-                        <form action="/save_img_dir" method="post" name="save_img_dir" role="form" class="form-inline">
-                            <div class="row">
-                                <div class="col-sm-offset-1 col-lg-11">
-                                    <div class="input-group col-sm-12">
-                                        <select name="directory" class="custom-select col-sm-12">
-                                            {% for dir in params["directories"] %}
-                                                <option value="{{ dir }}" 
-                                                {% if (dir == params["current_image_dir"]) %} selected="selected" {% endif %}
-                                                >
-                                                {{ dir }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                        <button class="btn btn-dark" type="submit" id="save_directory">Save</button>
-                                    </div>
-                                </div>   
-                            </div>
-                        </form>
-                        <br />
-                    </div>
-                    <div class="card-footer text-muted" id="curr_directory">
-                        Current directory: {{ params["current_image_dir"] }}
-                    </div>
-                </div>
-            </div>
-            <br />
-            <div class="col-sm-12 col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        Image slide interval
-                    </div>
-                    <div class="card-block">
-                        <p class="card-text"> How long should each photo be displayed.</p>
-                        <form action="/save_slide_interval" method="post" name="save_slide_interval" role="form">
-                            <div class="row">
-                                <div class="col-sm-offset-1 col-lg-11">
-                                    <div class="input-group">
-                                        <div class="input-group col-sm-12">
-                                            <input name="slide_interval" type="text" class="form-control" placeholder="{{ params["slide_interval"]}}" >
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-dark" type="submit" id="save_interval">Save</button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
-                            <br />
-                        </form>
-                    </div>
-                    <div class="card-footer text-muted" id="curr_slide_interval">
-                        Current image interval: {{ params["slide_interval"] }}
-                    </div>
-                </div>
-            </div>
-            <br />
-            <div class="col-sm-12 col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                            Network status
-                    </div>
-                    <div class="card-block">
-                        <div class="col-md-12">
-                                <p class="card-text">
-                                    {% if params["ssid"] == "" %}
-                                        No SSID found.
-                                    {% else %}
-                                        SSID: {{ params["ssid"] }}
-                                    {% endif %}
-                                </p>
-                            </div>
-                            <br />
-                            <div class="col-md-12">
-                                <p class="card-text">
-                                    {% if params["ip"] == "0.0.0.0" %}
-                                        No ip address found. You likely are not connected to a network, or experiencing a connection issue.
-                                    {% else %}
-                                        IP Address: {{ params["ip"] }}
-                                    {% endif %}
-                                </p>
-                            </div>
-                    </div>
-                    <br />
-                    <div class="card-footer text-muted">
-                        Network status:
-                        {% if params["ssid"] != "" and params["ip"] != "0.0.0.0" %}
-                            connected
-                        {% else %}
-                            not connected
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
 
+            <form class="text-guide" action="/save_settings" method="post" name="save_settings" role="form">
+                <div class="form-group">
+                    <label for="directory">Image directory</label>
+                    <select name="directory" id="directory" class="custom-select col-sm-12">
+                    {% for dir in params["directories"] %}
+                        <option value="{{ dir }}" 
+                        {% if (dir == params["current_image_dir"]) %} selected="selected" {% endif %}
+                        >
+                        {{ dir }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                    <small id="curr_directory" class="form-text text-muted">
+                        Current directory: {{ params["current_image_dir"] }}
+                    </small>
+                </div>
+
+                <div class="form-group ">
+                    <label for="slide_interval">Image slider interval (seconds) </label>
+                    <input name="slide_interval" id="slide_interval" type="text" class="form-control" placeholder="{{ params["slide_interval"]}}">
+                    <small id="curr_slide_interval" class="form-text text-muted">
+                        Current image interval: {{ params["slide_interval"] }}
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="decorations">Show decorations</label>
+                    <select name="decorations" id="decorations" class="custom-select col-sm-12">
+                        <option value="True" {% if (params["current_image_dir"] == "yes") %} selected="selected" {% endif %}>
+                            yes
+                        </option>
+                        <option value="False" {% if (params["current_image_dir"] == "no") %} selected="selected" {% endif %}>
+                            no
+                        </option>
+                    </select>
+                    <small id="curr_decorations" class="form-text text-muted">
+                        Decorations are 
+                        {% if (params["decorations"] == "True") %}
+                            On
+                        {% else %}
+                            Off
+                        {% endif %}
+                    </small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="save_settings" >Save settings</button>
+              </form>
+
+        </div>
     </div>
 </section>
 

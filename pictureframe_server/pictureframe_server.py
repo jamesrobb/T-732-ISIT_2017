@@ -20,7 +20,7 @@ app.debug = True
 def initial_config():
     config = configparser.ConfigParser()
 
-    config["DEFAULT"] = {"current_image_dir":"", "slide_interval":"7"}
+    config["DEFAULT"] = {"current_image_dir":"", "slide_interval":"7", "decorations": "False"}
 
     with open(CONFIG_FILE, "w") as config_file:
         config.write(config_file)
@@ -69,6 +69,21 @@ def save_slide_interval(interval_time):
 
     return True
 
+
+def save_decoration_status(status):
+    """Saving decoration status to config file.
+        Status param should be boolean"""
+    if status == 'True' or status == 'False':
+        config = configparser.ConfigParser()
+        config = read_config()
+        config["DEFAULT"]["decorations"] = status
+
+        with open(CONFIG_FILE, "w") as config_file:
+                config.write(config_file)
+
+        return True
+    else:
+        return False
 
 def get_base_directories():
     directories = []
@@ -129,6 +144,9 @@ def index():
         save_dir("All")
         current_image_dir = "All"
     params["current_image_dir"] = current_image_dir
+
+    params["decorations"] = read_config()["DEFAULT"]["decorations"]
+    print(params["decorations"])
 
     # Get network info
     ssid = get_current_ssid()
@@ -213,3 +231,26 @@ def slide_interval():
 def howto_upload():
     ip = get_ip_address(ADAPTOR)
     return render_template('upload.html', ip=ip)
+
+
+@app.route('/save_settings', methods=['post'])
+def save_settings():
+    print(request.form)
+    directory = request.form['directory'] 
+    interval = request.form['slide_interval']
+    dec_status = request.form['decorations']
+
+    change_dir = save_dir(directory)
+    change_decorations = save_decoration_status(dec_status)
+
+    dec_status = "On" if dec_status == "True" else "Off"
+
+    change_interval = True
+    if interval != "":
+        change_interval = save_slide_interval(interval)
+
+    if change_dir and change_interval and change_decorations:
+        return jsonify({'status': 'OK', 'values': { 'slide_interval': interval, 'directory': directory, 'decorations': dec_status }})
+    else:
+        return jsonify({'mymessage':'isBoop'})
+        #return jsonify({'status': 400, 'message': "Could not save settings properly"})
