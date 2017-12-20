@@ -37,7 +37,7 @@ last_lux = -1.0
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger("brightness-logger")
-logger.disabled = True
+logger.disabled = False
 
 
 while True:
@@ -48,6 +48,7 @@ while True:
 
     if lux >= 0 and abs(lux - last_lux) < MIN_LUX_DELTA:
         # the change in lux value was not significant so we sleep and try again
+        logger.debug("the change in lux value was not significant so we sleep and try again")
         time.sleep(1)
         continue
     
