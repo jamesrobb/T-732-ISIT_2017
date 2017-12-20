@@ -9,9 +9,10 @@ import logging
 # 170.0 is a lux value we observed in a typical office (in Iceland)
 MAX_LUX = 170.0
 MIN_LUX = 0.0
+MIN_LUX_DELTA = 5.0
 
 MAX_PWM_VALUE = 1000000
-MIN_PWM_VALUE = 100000
+MIN_PWM_VALUE = 30000
 PWM_INC = 100
 PWM_PIN = 18
 PWM_HZ = 800
@@ -32,6 +33,7 @@ tsl = tsl2591.Tsl2591()
 pi = pigpio.pi()
 # start at half brightness
 pwm_value = 500000
+last_lux = -1.0
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger("brightness-logger")
@@ -43,6 +45,11 @@ while True:
 
     lux = get_lux(tsl)
     logger.debug("lux: %f" % lux)
+
+    if lux >= 0 and abs(lux - last_lux) < MIN_LUX_DELTA:
+        # the change in lux value was not significant so we sleep and try again
+        time.sleep(1)
+        continue
     
     # 50000 is just a constant so that the exponential decay can reach a full 1000000
     new_value = (MAX_PWM_VALUE + 50000) * (1 - math.exp(-0.02 * lux))
