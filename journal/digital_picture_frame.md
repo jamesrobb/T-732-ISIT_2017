@@ -81,7 +81,7 @@ We mounted the glass and screen into the frame, and secured them in place with L
 
 With all the components now mounted in the frame, we wired everything up (schematics will follow). Everything powered up as expected.
 
-#14/12/2017
+## 14/12/2017
 
 A larger hole was drilled into the frame to allow more light to hit the light sensor. A circular piece of acrylic was expoxied into the whole so that dust did not enter the frame. The light sensor was then expoxied into the frame just undernear the acrylic. The accompanying script to adjust the brightness was modified to calculate the brightness using a increasing exponential decay formula. The updates to this can be seen in the git log.
 
@@ -93,18 +93,18 @@ The slideshow webpage was tested in chromium kiosk mode with the flask applicati
 
 The flask application was updated to allow changing the display interval for the slideshow, and the information was consolidated onto the landing page. A user can now see their connection information, and the slideshow settings on the landing page. The wifi tutorial page was created with instructions on how to connect the pi to a wireless network using keyboard and mouse.
 
-#15/12/2017
+## 15/12/2017
 
 We implemented a slideshow application using python and Tkinter, and the python package Pillow. Some of the Pillow features used require the `python3-pil.imagetk` package to be installed. This can be done with `apt-get`. We replicated the functionality of the browser based slideshow. The code is in the `/pictureframe_server/pictureframe_client.py` file. The new slideshow application also has an information slide it shows when it starts that indicates how to configure the wifi connection.
 
 We tweaked the tutorial we followed earlier for putting Chrome in kiosk mode to launch `pictureframe_client.py` instead of the browser.
 
 
-#16/12/2017
+## 16/12/2017
 
 We modified the slideshow applicating to support fading from one image to another. While this worked well on a modern laptop, the raspberry pi could not do the alpha blending efficiently enough for the effect to be worth while. While running on the pi, the fading effect was very "laggy". We speculate if we had used something that supproted hardware accelration, the effect would have worked as aniticpated.
 
-#17/12/2017
+## 17/12/2017
 
 Today we added seasonal decorations to the pictureframe client.This is accomplised with super-imposing an images over the image being displayed. Currently we have one image which is being shown during the month of december but if the user is not in the holiday spirit, it can be disabled through the web interface. 
 
