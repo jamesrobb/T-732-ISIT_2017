@@ -74,4 +74,6 @@ while True:
         
         pi.hardware_PWM(PWM_PIN, PWM_HZ, pwm_value)
 
+    last_lux = lux
+
 
